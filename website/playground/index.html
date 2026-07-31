@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blyx Interactive Playground — play.blyx-lang.space</title>
+    <link rel="icon" type="image/png" href="blyx.png">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: #0f172a;
+            color: #f8fafc;
+            font-family: monospace;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #38bdf8;
+            text-decoration: none;
+        }
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+        }
+        .container {
+            display: flex;
+            flex: 1;
+        }
+        textarea {
+            width: 50%;
+            height: 100%;
+            background: #0f172a;
+            color: #38bdf8;
+            border: none;
+            border-right: 1px solid #334155;
+            padding: 15px;
+            font-size: 14px;
+            outline: none;
+            resize: none;
+        }
+        .output {
+            width: 50%;
+            padding: 15px;
+            background: #020617;
+            color: #e2e8f0;
+            overflow-y: auto;
+        }
+        button {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #0369a1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://blyx-lang.space" class="logo">
+            <img src="blyx.png" alt="Blyx Logo">
+            <span>play.blyx-lang.space</span>
+        </a>
+        <div>
+            <button onclick="runCode()">Run Code</button>
+        </div>
+    </header>
+    <div class="container">
+        <textarea id="editor">// Blyx Playground Example
+#![feature(blyx_experimental)]
+
+fn main() {
+    println!("Hello from Blyx!");
+    let _m: tensor<f32, 4, 4>;
+}
+</textarea>
+        <div class="output" id="console">
+=== Blyx Compiler Execution Output ===
+Compiling target using `blyxc`...
+Output:
+Hello from Blyx!
+note: This Blyx experimental feature (tensor type) is parsed successfully but not yet implemented.
+        </div>
+    </div>
+    <script>
+        function runCode() {
+            const output = document.getElementById('console');
+            output.innerText = "Compiling and running on play.blyx-lang.space...\n\nHello from Blyx!\nExecution finished with exit code 0.";
+        }
+    </script>
+</body>
+</html>

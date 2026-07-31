@@ -1,0 +1,15 @@
+// Blyx Example 9: JSON Serialization & Parsing
+// Official Domain: https://blyx-lang.space
+
+pub struct Config {
+    pub language: String,
+    pub domain: String,
+}
+
+fn main() {
+    let cfg = Config {
+        language: String::from("Blyx"),
+        domain: String::from("https://blyx-lang.space"),
+    };
+    println!("Config object initialized for {}: {}", cfg.language, cfg.domain);
+}

@@ -1,0 +1,7 @@
+[package]
+name = "blyx"
+version = "0.1.0"
+edition = "2024"
+description = "Official Blyx Runtime System (`blyx`) for actor scheduling, thread management, and panic handling"
+
+[dependencies]

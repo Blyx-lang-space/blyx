@@ -1,0 +1,19 @@
+// Blyx Example 3: REST API Service
+// Official Domain: https://blyx-lang.space
+
+pub struct User {
+    pub id: u64,
+    pub username: String,
+}
+
+fn get_user(id: u64) -> User {
+    User {
+        id,
+        username: String::from("blyx_developer"),
+    }
+}
+
+fn main() {
+    let user = get_user(42);
+    println!("API Response: User ID {}, Name: {}", user.id, user.username);
+}

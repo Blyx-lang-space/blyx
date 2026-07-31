@@ -1,0 +1,11 @@
+// Blyx Example 8: File Input / Output Operations
+// Official Domain: https://blyx-lang.space
+
+use std::fs::File;
+use std::io::Write;
+
+fn main() {
+    let mut file = File::create("blyx_output.txt").unwrap();
+    file.write_all(b"High Performance Systems Programming with Blyx\n").unwrap();
+    println!("File written successfully.");
+}

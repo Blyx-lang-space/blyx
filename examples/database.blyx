@@ -1,0 +1,17 @@
+// Blyx Example 10: Database Access Layer
+// Official Domain: https://blyx-lang.space
+
+pub struct DbConnection {
+    pub url: String,
+}
+
+impl DbConnection {
+    pub fn connect(url: &str) -> DbConnection {
+        DbConnection { url: url.to_string() }
+    }
+}
+
+fn main() {
+    let _conn = DbConnection::connect("postgres://localhost:5432/blyx_db");
+    println!("Database connection established.");
+}

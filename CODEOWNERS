@@ -1,0 +1,6 @@
+# Blyx Project Code Owners
+* @blyx-lang/core-team
+
+/compiler/ @blyx-lang/compiler-team
+/library/  @blyx-lang/libs-team
+/tools/    @blyx-lang/tools-team

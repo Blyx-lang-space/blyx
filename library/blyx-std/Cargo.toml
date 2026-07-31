@@ -1,0 +1,8 @@
+[package]
+name = "blyx-std"
+version = "0.1.0"
+edition = "2024"
+description = "Official Blyx Standard Library (`blyx-std`)"
+
+[dependencies]
+blyx = { path = "../blyx" }

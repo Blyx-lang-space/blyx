@@ -1,0 +1,35 @@
+{
+  "name": "blyx",
+  "displayName": "Blyx Language Support",
+  "description": "Official VS Code extension for the Blyx programming language (https://blyx-lang.space)",
+  "version": "0.1.0",
+  "publisher": "blyx-lang",
+  "icon": "../../blyx.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Formatters",
+    "Debuggers"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "blyx",
+        "aliases": ["Blyx", "blyx"],
+        "extensions": [".blyx", ".rs"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "blyx",
+        "scopeName": "source.blyx",
+        "path": "./syntaxes/blyx.tmLanguage.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+// Blyx Example 2: Async HTTP Server
+// Official Domain: https://blyx-lang.space
+
+use std::net::TcpListener;
+use std::io::Write;
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
+    println!("Blyx HTTP Server listening on http://127.0.0.1:8080");
+
+    for stream in listener.incoming() {
+        let mut stream = stream.unwrap();
+        let response = "HTTP/1.1 200 OK\r\nContent-Length: 22\r\n\r\nHello from Blyx Server";
+        stream.write_all(response.as_bytes()).unwrap();
+    }
+}

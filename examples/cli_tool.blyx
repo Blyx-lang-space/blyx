@@ -1,0 +1,14 @@
+// Blyx Example 4: Command Line Interface Tool
+// Official Domain: https://blyx-lang.space
+
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    println!("Blyx CLI Utility v0.1");
+    if args.len() > 1 {
+        println!("Argument provided: {}", args[1]);
+    } else {
+        println!("Usage: blyx_cli <command>");
+    }
+}

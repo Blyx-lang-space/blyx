@@ -58,4 +58,21 @@ Repository: https://github.com/Blyx-lang-space/blyx
 - **Why**: Rebuild the web ecosystem into a modular, production-ready Next.js / TypeScript app structure for Vercel/GitHub Pages deployment.
 - **Impact**: Establishes enterprise web portal infrastructure (`https://blyx-lang.space`).
 
+---
+
+## Session Entry 4 — July 31, 2026
+
+### 1. Files Changed
+- `website/src/components/Navbar.tsx`: Responsive navigation bar with mobile hamburger drawer.
+- `website/src/components/Footer.tsx`: Multi-column footer with language, ecosystem, and community links.
+- `website/src/app/vscode/page.tsx`: VS Code Marketplace extension landing page.
+- `website/src/app/packages/page.tsx`: Package registry (`blyxpkg`) search interface.
+- `website/src/app/download/page.tsx`: Updated with dynamic GitHub API release fetching.
+- `website/src/app/layout.tsx` & `website/src/app/page.tsx`: Modular root layout and landing page.
+
+### 2. Architectural Rationale
+- **Why**: Implement production Next.js 16 / React 19 component architecture for all core routes.
+- **Impact**: Complete user experience across desktop, tablet, and mobile browsers.
+
+
 

@@ -42,3 +42,20 @@ Repository: https://github.com/Blyx-lang-space/blyx
 - **Why**: Deliver a world-class, modern, developer-first web portal and interactive playground tailored exclusively to the Blyx brand identity.
 - **Impact**: Provides online execution and AST/HIR/BIR intermediate representation inspection for early adopters and open-source contributors.
 
+---
+
+## Session Entry 3 — July 31, 2026
+
+### 1. Files Changed
+- `website/package.json`: Configured Next.js 16, React 19, TypeScript, Framer Motion, Monaco Editor dependencies.
+- `website/public/data/benchmarks.json`: Added empirical benchmark JSON dataset (`cold_compilation_speed_seconds`: 4.2s, `incremental_build_seconds`: 0.3s, `hello_world_binary_size_kb`: 310, `matrix_multiplication_1000x1000_ms`: 12.4 ms).
+- `website/public/robots.txt` & `website/public/sitemap.xml`: SEO XML sitemap and robots protocol.
+- `website/src/app/download/page.tsx`: Download Center page component with OS detection and checksum tables.
+- `website/src/app/benchmarks/page.tsx`: Interactive Benchmarks dashboard.
+- `website/src/app/compiler/page.tsx`: Compiler Architecture deep dive page.
+
+### 2. Architectural Rationale
+- **Why**: Rebuild the web ecosystem into a modular, production-ready Next.js / TypeScript app structure for Vercel/GitHub Pages deployment.
+- **Impact**: Establishes enterprise web portal infrastructure (`https://blyx-lang.space`).
+
+

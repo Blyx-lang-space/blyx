@@ -29,3 +29,16 @@ Repository: https://github.com/Blyx-lang-space/blyx
 
 ### 6. Next Engineering Priority
 - Expand BIR optimization passes (`compiler/blyx_bir/src/passes/mod.rs`) for loop-invariant code motion (LICM) and dead block pruning.
+
+---
+
+## Session Entry 2 — July 31, 2026
+
+### 1. Files Changed
+- `website/index.html`: Upgraded official Blyx Web Portal v2 (`https://blyx-lang.space`) with ambient glowing cyan/purple mesh background, responsive navigation, feature cards, ecosystem toolchain suite, and tabbed code preview.
+- `website/playground/index.html`: Upgraded Blyx Interactive Playground (`play.blyx-lang.space`) with Monaco-style split pane layout and live execution tabs (`Output`, `Diagnostics`, `BIR SSA`, `LLVM IR`).
+
+### 2. Architectural Rationale
+- **Why**: Deliver a world-class, modern, developer-first web portal and interactive playground tailored exclusively to the Blyx brand identity.
+- **Impact**: Provides online execution and AST/HIR/BIR intermediate representation inspection for early adopters and open-source contributors.
+

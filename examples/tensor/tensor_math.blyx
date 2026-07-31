@@ -1,0 +1,9 @@
+// Blyx Example 6: Static Tensor Operations & Matrix Multiplications
+// Official Domain: https://blyx-lang.space
+
+#![feature(blyx_experimental)]
+
+fn main() {
+    println!("Allocating statically dimensioned tensor<f32, 128, 64>...");
+    let _weights: tensor<f32, 128, 64>;
+}

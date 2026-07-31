@@ -1,0 +1,13 @@
+// Blyx Example 5: Concurrent Actor System
+// Official Domain: https://blyx-lang.space
+
+#![feature(blyx_experimental)]
+
+actor WorkerSystem {
+    worker_count: usize,
+}
+
+fn main() {
+    println!("Initializing Blyx Actor System...");
+    let _system = WorkerSystem { worker_count: 8 };
+}

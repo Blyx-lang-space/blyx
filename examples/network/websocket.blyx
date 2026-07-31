@@ -1,0 +1,6 @@
+// Blyx Example 11: Real-time WebSocket Protocol Server
+// Official Domain: https://blyx-lang.space
+
+fn main() {
+    println!("Initializing Blyx WebSocket Server on wss://blyx-lang.space/ws...");
+}

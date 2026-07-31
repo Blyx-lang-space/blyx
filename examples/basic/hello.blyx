@@ -1,0 +1,6 @@
+// Blyx Example 1: Hello World
+// Official Domain: https://blyx-lang.space
+
+fn main() {
+    println!("Hello, World from Blyx!");
+}

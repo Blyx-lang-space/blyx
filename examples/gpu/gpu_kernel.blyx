@@ -1,0 +1,11 @@
+// Blyx Example 7: Heterogeneous GPU Kernel Dispatch Block
+// Official Domain: https://blyx-lang.space
+
+#![feature(blyx_experimental)]
+
+fn main() {
+    println!("Dispatching GPU kernel execution block...");
+    gpu {
+        // Heterogeneous compute block
+    };
+}

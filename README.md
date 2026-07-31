@@ -1,79 +1,190 @@
 <div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rust-lang/www.rust-lang.org/master/static/images/rust-social-wide-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/rust-lang/www.rust-lang.org/master/static/images/rust-social-wide-light.svg">
-    <img alt="The Rust Programming Language: A language empowering everyone to build reliable and efficient software"
-         src="https://raw.githubusercontent.com/rust-lang/www.rust-lang.org/master/static/images/rust-social-wide-light.svg"
-         width="50%">
-  </picture>
+  <img src="blyx.png" alt="Blyx Logo" width="160" />
+  <h1>Blyx Programming Language</h1>
+  <p><b>AI-native systems programming language for high-performance, memory-safe, parallel computing.</b></p>
 
-[Website][Rust] | [Getting started] | [Learn] | [Documentation] | [Contributing]
+  <p>
+    <a href="https://blyx-lang.space"><img src="https://img.shields.io/badge/Website-blyx--lang.space-00f2fe?style=for-the-badge&logo=google-chrome&logoColor=black" alt="Website" /></a>
+    <a href="https://blyx-lang.space"><img src="https://img.shields.io/badge/Docs-Reference-4facfe?style=for-the-badge&logo=book&logoColor=white" alt="Documentation" /></a>
+    <a href="https://play.blyx-lang.space"><img src="https://img.shields.io/badge/Playground-Try_Online-38bdf8?style=for-the-badge&logo=codeforces&logoColor=white" alt="Playground" /></a>
+    <a href="https://github.com/Blyx-lang-space/blyx"><img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" /></a>
+  </p>
 </div>
 
-This is the main source code repository for [Rust]. It contains the compiler,
-standard library, and documentation.
+---
 
-[Rust]: https://www.rust-lang.org/
-[Getting Started]: https://www.rust-lang.org/learn/get-started
-[Learn]: https://www.rust-lang.org/learn
-[Documentation]: https://www.rust-lang.org/learn#learn-use
-[Contributing]: CONTRIBUTING.md
+## Why Blyx?
 
-## Why Rust?
+- 🔒 **Memory Safety Without GC**: Static ownership and lifetime verification prevent data races and buffer overflows without garbage collection overhead.
+- ⚡ **Zero-Cost Abstractions**: High-level abstractions compile directly to optimized native machine code.
+- 🎭 **Actor Concurrency**: Dedicated lock-free `actor` primitives backed by work-stealing thread pools in `blyx`.
+- 𝚯 **Native Tensor Types**: Statically dimensioned `tensor<T, D1, D2>` primitives with compile-time rank verification.
+- 🖥️ **GPU Programming**: Inline `gpu { ... }` blocks targeting SPIR-V and NVPTX accelerator kernels.
+- 🤖 **AI-Native Language Design**: Built for machine learning workloads, numerical linear algebra, and heterogeneous compute.
+- 🚀 **Fast Compilation**: Incremental caching engine (`IncrementalCacheEngine`) and SSA-based intermediate representation (`blyx_bir`).
+- 🌐 **Cross-Platform**: Executable targets supported across Linux, Windows, macOS, and WebAssembly.
 
-- **Performance:** Fast and memory-efficient, suitable for critical services, embedded devices, and easily integrated with other languages.
+---
 
-- **Reliability:** Our rich type system and ownership model ensure memory and thread safety, reducing bugs at compile-time.
+## Language Syntax & Features
 
-- **Productivity:** Comprehensive documentation, a compiler committed to providing great diagnostics, and advanced tooling including package manager and build tool ([Cargo]), auto-formatter ([rustfmt]), linter ([Clippy]) and editor support ([rust-analyzer]).
+### 1. Hello World
+```blyx
+fn main() {
+    println!("Hello, World from Blyx!");
+}
+```
 
-[Cargo]: https://github.com/rust-lang/cargo
-[rustfmt]: https://github.com/rust-lang/rustfmt
-[Clippy]: https://github.com/rust-lang/rust-clippy
-[rust-analyzer]: https://github.com/rust-lang/rust-analyzer
+### 2. Functions & Value Returning
+```blyx
+fn compute_sum(a: i32, b: i32) -> i32 {
+    a + b
+}
 
-## Quick Start
+fn main() {
+    let result = compute_sum(20, 22);
+    println!("Result: {}", result);
+}
+```
 
-Read ["Installation"] from [The Book].
+### 3. Actor Declarations & Concurrency
+```blyx
+#![feature(blyx_experimental)]
 
-["Installation"]: https://doc.rust-lang.org/book/ch01-01-installation.html
-[The Book]: https://doc.rust-lang.org/book/index.html
+actor NetworkWorker {
+    worker_id: u64,
+}
 
-## Installing from Source
+fn main() {
+    let _worker = NetworkWorker { worker_id: 1 };
+}
+```
 
-If you really want to install from source (though this is not recommended), see
-[INSTALL.md](INSTALL.md).
+### 4. Native Tensor Types
+```blyx
+#![feature(blyx_experimental)]
 
-## Getting Help
+fn main() {
+    // Statically dimensioned 128x64 matrix tensor
+    let _weights: tensor<f32, 128, 64>;
+}
+```
 
-See https://www.rust-lang.org/community for a list of chat platforms and forums.
+### 5. Heterogeneous GPU Execution Blocks
+```blyx
+#![feature(blyx_experimental)]
 
-## Contributing
+fn main() {
+    gpu {
+        // Heterogeneous GPU compute kernel block
+    };
+}
+```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+### 6. Parallel Execution Blocks
+```blyx
+#![feature(blyx_experimental)]
 
-For a detailed explanation of the compiler's architecture and how to begin contributing, see the [rustc-dev-guide](https://rustc-dev-guide.rust-lang.org/).
+fn main() {
+    parallel {
+        // Work-stealing parallel loop block
+    };
+}
+```
+
+---
+
+## Installation & Usage
+
+### Installing Blyx via `blyxup`
+Install the official compiler (`blyxc`), package manager (`blyxpkg`), and ecosystem tools using `blyxup`:
+
+```bash
+# Install stable toolchain channel
+blyxup install stable
+
+# Verify installation
+blyxc --version
+blyxpkg --version
+```
+
+### Building & Running Programs
+
+1. **Direct Compiler Execution (`blyxc`)**:
+   ```bash
+   blyxc hello.blyx -o hello
+   ./hello
+   ```
+
+2. **Package Manager Execution (`blyxpkg`)**:
+   ```bash
+   # Create a new Blyx project
+   blyxpkg new my_app
+   cd my_app
+
+   # Build and execute project
+   blyxpkg run
+   ```
+
+---
+
+## Ecosystem Toolchain
+
+| Binary | Description |
+| :--- | :--- |
+| **`blyxc`** | Official Blyx compiler driver targeting LLVM IR and native binaries. |
+| **`blyxpkg`** | Official package manager managing `Blyx.toml` dependencies and builds. |
+| **`blyxfmt`** | Code formatter providing automated 4-space code indentation. |
+| **`blyxdoc`** | HTML documentation generator. |
+| **`blyx-analyzer`** | Language Server Protocol (LSP) implementation for VS Code and IDEs. |
+| **`blyxdbg`** | Interactive debugger with breakpoint and process inspection support. |
+| **`blyxprof`** | Performance profiler analyzing CPU, memory allocations, and GPU kernels. |
+| **`blyxup`** | Toolchain version installer managing `stable`, `beta`, and `nightly` releases. |
+
+---
+
+## Documentation & Playground
+
+- **Official Web Portal**: [https://blyx-lang.space](https://blyx-lang.space)
+- **Interactive Playground**: [play.blyx-lang.space](https://play.blyx-lang.space)
+- **API Reference**: [docs/api_reference.md](docs/api_reference.md)
+- **Language Book**: [docs/book/01_introduction.md](docs/book/01_introduction.md)
+
+---
+
+## Code Examples
+
+Explore complete runnable examples in the [`examples/`](examples/) directory:
+- [hello.blyx](examples/hello.blyx): Hello World program
+- [http_server.blyx](examples/http_server.blyx): Async HTTP server
+- [rest_api.blyx](examples/rest_api.blyx): REST API service
+- [cli_tool.blyx](examples/cli_tool.blyx): Command line utility
+- [actor_system.blyx](examples/actor_system.blyx): Actor concurrency system
+- [tensor_math.blyx](examples/tensor_math.blyx): Tensor matrix computations
+- [gpu_kernel.blyx](examples/gpu_kernel.blyx): GPU accelerator block
+- [file_io.blyx](examples/file_io.blyx): File I/O operations
+- [json_parsing.blyx](examples/json_parsing.blyx): JSON serialization
+- [database.blyx](examples/database.blyx): Database connection layer
+- [websocket.blyx](examples/websocket.blyx): Real-time WebSockets
+
+---
+
+## Contributing & Governance
+
+Contributions to Blyx are welcome!
+- Review [CONTRIBUTING.md](CONTRIBUTING.md) for pull request guidelines.
+- Adhere to the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+- Learn about language proposals in the [RFC Process](docs/rfc_process.md).
+- Report security concerns per [SECURITY.md](SECURITY.md).
+
+---
 
 ## License
 
-Rust is primarily distributed under the terms of both the MIT license and the
-Apache License (Version 2.0), with portions covered by various BSD-like
-licenses.
+Blyx is distributed under the terms of both the MIT License and the Apache License (Version 2.0). See [LICENSE-MIT](LICENSE-MIT) and [LICENSE-APACHE](LICENSE-APACHE) for details.
 
-See [LICENSE-APACHE](LICENSE-APACHE), [LICENSE-MIT](LICENSE-MIT), and
-[COPYRIGHT](COPYRIGHT) for details.
+---
 
-## Trademark
+## Acknowledgements
 
-[The Rust Foundation][rust-foundation] owns and protects the Rust and Cargo
-trademarks and logos (the "Rust Trademarks").
-
-If you want to use these names or brands, please read the
-[Rust language trademark policy][trademark-policy].
-
-Third-party logos may be subject to third-party copyrights and trademarks. See
-[Licenses][policies-licenses] for details.
-
-[rust-foundation]: https://rustfoundation.org/
-[trademark-policy]: https://rustfoundation.org/policy/rust-trademark-policy/
-[policies-licenses]: https://www.rust-lang.org/policies/licenses
+The Blyx Programming Language compiler infrastructure originated from research and compiler engineering experimentation inspired by modern static analysis and SSA intermediate representation architectures.

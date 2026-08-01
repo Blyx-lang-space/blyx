@@ -1,0 +1,9 @@
+[package]
+name = "blyx_typeck"
+version = "0.1.0"
+edition = "2024"
+description = "Native Type Checker and Static Tensor Verifier for the Blyx Compiler"
+
+[dependencies]
+blyx_ast = { path = "../blyx_ast" }
+blyx_semantic = { path = "../blyx_semantic" }

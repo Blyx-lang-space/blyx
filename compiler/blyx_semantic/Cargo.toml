@@ -1,0 +1,8 @@
+[package]
+name = "blyx_semantic"
+version = "0.1.0"
+edition = "2024"
+description = "Native Semantic Analysis and Symbol Table Resolver for the Blyx Compiler"
+
+[dependencies]
+blyx_ast = { path = "../blyx_ast" }

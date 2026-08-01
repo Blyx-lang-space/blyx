@@ -4,6 +4,9 @@ members = [
 # tidy-alphabetical-start
   "compiler/blyx_lexer",
   "compiler/blyx_parser",
+  "compiler/blyx_ast",
+  "compiler/blyx_semantic",
+  "compiler/blyx_typeck",
   "compiler/blyx_bir",
   "compiler/blyxc",
   "library/blyx",

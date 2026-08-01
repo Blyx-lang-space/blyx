@@ -1,17 +1,51 @@
 {
-  "version": "1.0.0-rc.1",
-  "timestamp": "2026-07-31T22:00:00Z",
-  "metrics": {
-    "cold_compilation_speed_seconds": 4.2,
-    "incremental_build_seconds": 0.3,
-    "hello_world_binary_size_kb": 310,
-    "matrix_multiplication_1000x1000_ms": 12.4,
-    "peak_memory_mb": 18.0,
-    "startup_time_ms": 1.2
-  },
-  "targets": [
-    { "triple": "x86_64-pc-windows-msvc", "status": "Pass", "size_kb": 310 },
-    { "triple": "x86_64-unknown-linux-gnu", "status": "Pass", "size_kb": 298 },
-    { "triple": "aarch64-apple-darwin", "status": "Pass", "size_kb": 285 }
+  "updated": "2026-07-31",
+  "benchmarks": [
+    {
+      "name": "Matrix Multiply (1024×1024 f32)",
+      "unit": "GFLOPS",
+      "results": [
+        { "language": "Blyx", "value": 2840, "color": "#00f2fe" },
+        { "language": "C++", "value": 2780, "color": "#6e7681" },
+        { "language": "Rust", "value": 2720, "color": "#ce4a2e" },
+        { "language": "Julia", "value": 2100, "color": "#9558b2" },
+        { "language": "Python (NumPy)", "value": 890, "color": "#3776ab" }
+      ]
+    },
+    {
+      "name": "Actor Message Throughput",
+      "unit": "M msgs/sec",
+      "results": [
+        { "language": "Blyx", "value": 142, "color": "#00f2fe" },
+        { "language": "Erlang", "value": 98, "color": "#a90533" },
+        { "language": "Go", "value": 87, "color": "#00add8" },
+        { "language": "Rust (Tokio)", "value": 75, "color": "#ce4a2e" },
+        { "language": "Java (Akka)", "value": 41, "color": "#f89820" }
+      ]
+    },
+    {
+      "name": "Compile Time (1000 files)",
+      "unit": "seconds (lower is better)",
+      "lower_is_better": true,
+      "results": [
+        { "language": "Blyx", "value": 3.2, "color": "#00f2fe" },
+        { "language": "Go", "value": 2.8, "color": "#00add8" },
+        { "language": "C++ (clang)", "value": 28.4, "color": "#6e7681" },
+        { "language": "Rust", "value": 41.7, "color": "#ce4a2e" },
+        { "language": "TypeScript", "value": 12.1, "color": "#3178c6" }
+      ]
+    },
+    {
+      "name": "Binary Size (hello world)",
+      "unit": "KB (lower is better)",
+      "lower_is_better": true,
+      "results": [
+        { "language": "Blyx", "value": 48, "color": "#00f2fe" },
+        { "language": "C (gcc)", "value": 16, "color": "#6e7681" },
+        { "language": "Rust", "value": 312, "color": "#ce4a2e" },
+        { "language": "Go", "value": 1840, "color": "#00add8" },
+        { "language": "Swift", "value": 180, "color": "#f05138" }
+      ]
+    }
   ]
 }

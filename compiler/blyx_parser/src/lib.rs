@@ -40,6 +40,10 @@ impl BlyxParser {
         }
     }
 
+    pub fn errors(&self) -> &[ParseError] {
+        &self.errors
+    }
+
     pub fn parse_file(&mut self, path: &str) -> BlyxFile {
         let mut items = Vec::new();
         let span = self.peek().span.clone();
@@ -125,7 +129,7 @@ impl BlyxParser {
         })
     }
 
-    fn parse_actor(&mut self, is_pub: bool) -> ParseResult<ActorDef> {
+    fn parse_actor(&mut self, _is_pub: bool) -> ParseResult<ActorDef> {
         let span = self.peek().span.clone();
         self.expect(&TokenKind::Actor)?;
         let name = match &self.advance().kind {

@@ -3,7 +3,7 @@
 // Open Source — MIT + Apache 2.0
 // Repository: https://github.com/Blyx-lang-space/blyx
 
-use blyx_lexer::Span;
+pub use blyx_lexer::Span;
 
 #[derive(Debug, Clone)]
 pub struct BlyxFile {

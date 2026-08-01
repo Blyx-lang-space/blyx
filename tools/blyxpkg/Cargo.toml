@@ -5,6 +5,3 @@ edition = "2024"
 description = "Official Package Manager for the Blyx Programming Language"
 
 [dependencies]
-clap = { version = "4.4", features = ["derive"] }
-serde = { version = "1.0", features = ["derive"] }
-toml = "0.8"

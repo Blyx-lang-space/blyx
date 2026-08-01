@@ -6,3 +6,4 @@ description = "Native Independent Parser for the Blyx Programming Language"
 
 [dependencies]
 blyx_lexer = { path = "../blyx_lexer" }
+blyx_ast = { path = "../blyx_ast" }

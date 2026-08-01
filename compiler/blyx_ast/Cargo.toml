@@ -5,3 +5,4 @@ edition = "2024"
 description = "Native AST Nodes, Visitors, and Span Tracking for the Blyx Compiler"
 
 [dependencies]
+blyx_lexer = { path = "../blyx_lexer" }

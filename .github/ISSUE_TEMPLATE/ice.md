@@ -1,6 +1,6 @@
 ---
 name: Internal Compiler Error
-about: Create a report for an internal compiler error in rustc.
+about: Create a report for an internal compiler error in blyxc.
 labels: C-bug, I-ICE, T-compiler
 title: "[ICE]: "
 ---
@@ -8,12 +8,12 @@ title: "[ICE]: "
 Thank you for finding an Internal Compiler Error! 🧊  If possible, try to provide
 a minimal verifiable example. You can read "Rust Bug Minimization Patterns" for
 how to create smaller examples.
-http://blog.pnkfx.org/blog/2019/11/18/rust-bug-minimization-patterns/
+https://blyx-lang.space
 -->
 
 ### Code
 
-```Rust
+```Blyx
 <code>
 ```
 
@@ -24,7 +24,7 @@ If you're using the stable version of the compiler, you should also check if the
 bug also exists in the beta or nightly versions.
 -->
 
-`rustc --version --verbose`:
+`blyxc --version --verbose`:
 ```
 <version>
 ```

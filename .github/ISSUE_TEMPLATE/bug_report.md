@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a bug report for Rust.
+about: Create a bug report for Blyx.
 labels: C-bug
 ---
 <!--
@@ -10,7 +10,7 @@ along with any information you feel relevant to replicating the bug.
 
 I tried this code:
 
-```rust
+```blyx
 <code>
 ```
 
@@ -24,14 +24,14 @@ If you're using the stable version of the compiler, you should also check if the
 bug also exists in the beta or nightly versions.
 -->
 
-`rustc --version --verbose`:
+`blyxc --version --verbose`:
 ```
 <version>
 ```
 
 <!--
-Include a backtrace in the code block by setting `RUST_BACKTRACE=1` in your
-environment. E.g. `RUST_BACKTRACE=1 cargo build`.
+Include a backtrace in the code block by setting `BLYX_BACKTRACE=1` in your
+environment. E.g. `BLYX_BACKTRACE=1 blyxpkg build`.
 -->
 <details><summary>Backtrace</summary>
 <p>

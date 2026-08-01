@@ -8,7 +8,7 @@
               {
                 "license": {
                   "copyright": [
-                    "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                    "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
                   ],
                   "spdx": "Apache-2.0 OR MIT"
                 },
@@ -93,7 +93,7 @@
               {
                 "license": {
                   "copyright": [
-                    "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                    "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
                   ],
                   "spdx": "Apache-2.0 OR MIT"
                 },
@@ -114,7 +114,7 @@
             "license": {
               "copyright": [
                 "2016 Ike Ku, Jessica Stokes and Leon Guan",
-                "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                  "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
               ],
               "spdx": "Apache-2.0 OR MIT"
             },
@@ -126,7 +126,7 @@
               {
                 "license": {
                   "copyright": [
-                    "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                    "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
                   ],
                   "spdx": "Apache-2.0 OR MIT"
                 },
@@ -181,7 +181,7 @@
             "license": {
               "copyright": [
                 "2003-2019 University of Illinois at Urbana-Champaign",
-                "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                  "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
               ],
               "spdx": "Apache-2.0 WITH LLVM-exception AND (Apache-2.0 OR MIT)"
             },
@@ -193,7 +193,7 @@
             "license": {
               "copyright": [
                 "2014 Alex Crichton",
-                "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                  "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
               ],
               "spdx": "Apache-2.0 OR MIT"
             },
@@ -205,7 +205,7 @@
             "license": {
               "copyright": [
                 "2019 The Crossbeam Project Developers",
-                "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                  "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
               ],
               "spdx": "Apache-2.0 OR MIT"
             },
@@ -216,7 +216,7 @@
             "license": {
               "copyright": [
                 "2016 The Fuchsia Authors",
-                "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                  "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
               ],
               "spdx": "BSD-2-Clause AND (Apache-2.0 OR MIT)"
             },
@@ -228,7 +228,7 @@
             "license": {
               "copyright": [
                 "Rust on Embedded Devices Working Group",
-                "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                  "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
               ],
               "spdx": "Apache-2.0 OR CC-BY-SA-4.0 OR MIT"
             },
@@ -240,7 +240,7 @@
             "license": {
               "copyright": [
                 "2014 Jorge Aparicio",
-                "The Rust Project Developers (see https://thanks.rust-lang.org)"
+                  "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
               ],
               "spdx": "Apache-2.0 OR MIT"
             },
@@ -273,7 +273,7 @@
         ],
         "license": {
           "copyright": [
-            "The Rust Project Developers (see https://thanks.rust-lang.org)"
+            "The Blyx Project Developers (see https://thanks.blyx-lang.space)"
           ],
           "spdx": "Apache-2.0 OR MIT"
         },

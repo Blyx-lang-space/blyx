@@ -11,7 +11,7 @@ on:
 jobs:
   analysis:
     runs-on: ubuntu-24.04
-    if: github.repository == 'rust-lang/rust'
+    if: github.repository == 'Blyx-lang-space/blyx'
     permissions:
       pull-requests: write
     steps:
@@ -29,7 +29,7 @@ jobs:
           sleep 60
 
           # Get closest bors merge commit
-          PARENT_COMMIT=`git rev-list --author='bors@rust-lang.org' --author='122020455+rust-bors\[bot\]@users.noreply.github.com' -n1 --first-parent HEAD^1`
+          PARENT_COMMIT=`git rev-list --author='bors@blyx-lang.space' --author='122020455+blyx-bors\[bot\]@users.noreply.github.com' -n1 --first-parent HEAD^1`
           echo "Parent: ${PARENT_COMMIT}"
 
           # Find PR for the current commit

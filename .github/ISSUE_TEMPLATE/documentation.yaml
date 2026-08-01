@@ -10,16 +10,16 @@ body:
         Documentation problems might be grammatical issues, typos, or unclear wording, please provide details regarding the documentation including where it is present.
 
         Note: If your issue is for one of these, please use their dedicated issue tracker instead:
-        - [The Rust Book](https://github.com/rust-lang/book/issues)
-        - [Rust by Example](https://github.com/rust-lang/rust-by-example/issues)
-        - [The Edition Guide](https://github.com/rust-lang/edition-guide/issues)
-        - [The Cargo Book](https://github.com/rust-lang/cargo/issues)
-        - [The Clippy Book](https://github.com/rust-lang/rust-clippy/issues)
-        - [The Reference](https://github.com/rust-lang/reference/issues)
-        - [The Rustonomicon](https://github.com/rust-lang/nomicon/issues)
+        - [The Blyx Book](https://github.com/Blyx-lang-space/blyx/issues)
+        - [Blyx by Example](https://github.com/Blyx-lang-space/blyx/issues)
+        - [The Blyx Edition Guide](https://github.com/Blyx-lang-space/blyx/issues)
+        - [The Blyx Package Book](https://github.com/Blyx-lang-space/blyx/issues)
+        - [The Blyx Linter Guide](https://github.com/Blyx-lang-space/blyx/issues)
+        - [The Blyx Reference](https://github.com/Blyx-lang-space/blyx/issues)
+        - [The Blyxonomicon](https://github.com/Blyx-lang-space/blyx/issues)
         - [The Embedded Book](https://github.com/rust-embedded/book/issues)
 
-        Or, if you find an issue related to rustdoc (e.g. doctest, rustdoc UI), please use the rustdoc issue template instead.
+        Or, if you find an issue related to Blyx documentation generation (e.g. doctest, docs UI), please use the documentation issue template instead.
 
         All other documentation issues should be filed here.
 

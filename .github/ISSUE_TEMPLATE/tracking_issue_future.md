@@ -1,6 +1,6 @@
 ---
 name: Future Incompatibility Tracking Issue
-about: A tracking issue for a future-incompatible lint
+about: A tracking issue for a future-incompatible lint in Blyx
 title: Tracking Issue for future-incompatibility lint XXX
 labels: C-tracking-issue C-future-incompatibility T-compiler A-lints
 ---
@@ -16,7 +16,7 @@ Also check for any `A-` labels to add.
 
 This is the **tracking issue** for the `YOUR_LINT_NAME_HERE` future-compatibility warning and other related errors. The goal of this page is to describe why this change was made and how you can fix code that is affected by it. It also provides a place to ask questions or register a complaint if you feel the change should not be made. For more information on the policy around future-compatibility warnings, see our [breaking change policy guidelines][guidelines].
 
-[guidelines]: https://rustc-dev-guide.rust-lang.org/bug-fix-procedure.html
+[guidelines]: https://blyx-lang.space
 
 ### What is the warning for?
 
@@ -28,7 +28,7 @@ This is the **tracking issue** for the `YOUR_LINT_NAME_HERE` future-compatibilit
 
 ### Example
 
-```rust
+```blyx
 // Include an example here.
 ```
 

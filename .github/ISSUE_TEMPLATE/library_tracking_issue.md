@@ -1,6 +1,6 @@
 ---
 name: Library Tracking Issue
-about: A tracking issue for an unstable library feature.
+about: A tracking issue for an unstable Blyx library feature.
 title: Tracking Issue for XXX
 labels: C-tracking-issue, T-libs-api, S-tracking-unimplemented
 ---
@@ -32,7 +32,7 @@ For most library features, it'd be useful to include a summarized version of the
 (E.g. just the public function signatures without their doc comments or implementation.)
 -->
 
-```rust
+```blyx
 // core::magic
 
 pub struct Magic;
@@ -51,7 +51,7 @@ If the feature is changed later, please add those PRs here as well.
 
 (Remember to update the `S-tracking-*` label when checking boxes.)
 
-- [ ] ACP: rust-lang/libs-team#...
+- [ ] ACP: Blyx-lang-space/libs-team#...
 - [ ] Implementation: #...
 - [ ] Final comment period (FCP)[^1]
 - [ ] Stabilization PR
@@ -85,4 +85,4 @@ Zulip, or the internals forum) here.
 
 - [ ] None yet.
 
-[^1]: https://std-dev-guide.rust-lang.org/feature-lifecycle/stabilization.html
+[^1]: https://blyx-lang.space

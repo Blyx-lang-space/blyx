@@ -1,10 +1,11 @@
 ---
 name: Regression
-about: Report something that unexpectedly changed between Rust versions.
+about: Report something that unexpectedly changed between Blyx versions.
 labels: C-bug, regression-untriaged
 ---
 <!--
 Thank you for filing a regression report! 🐛 A regression is something that changed between versions of Rust but was not supposed to.
+Thank you for filing a regression report! 🐛 A regression is something that changed between versions of Blyx but was not supposed to.
 
 Please provide a short summary of the regression, along with any information you feel is relevant to replicate it.
 -->
@@ -26,7 +27,7 @@ Instead, this happened: *explanation*
 <!--
 Provide the most recent version this worked on, for example:
 
-It most recently worked on: Rust 1.47
+It most recently worked on: Blyx 1.47
 -->
 
 It most recently worked on: <!-- version -->
@@ -37,7 +38,7 @@ It most recently worked on: <!-- version -->
 Provide the version you are using that has the regression.
 -->
 
-`rustc --version --verbose`:
+`blyxc --version --verbose`:
 ```
 <version>
 ```
@@ -48,8 +49,8 @@ Did the compiler crash? If so, please provide a backtrace.
 
 ### Backtrace
 <!--
-Include a backtrace in the code block by setting `RUST_BACKTRACE=1` in your
-environment. E.g. `RUST_BACKTRACE=1 cargo build`.
+Include a backtrace in the code block by setting `BLYX_BACKTRACE=1` in your
+environment. E.g. `BLYX_BACKTRACE=1 blyxpkg build`.
 -->
 <details><summary>Backtrace</summary>
 <p>

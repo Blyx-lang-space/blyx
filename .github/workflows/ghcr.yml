@@ -1,4 +1,4 @@
-# Mirror DockerHub images used by the Rust project to ghcr.io.
+# Mirror DockerHub images used by the Blyx project to ghcr.io.
 # Images are available at https://github.com/orgs/rust-lang/packages.
 #
 # In some CI jobs, we pull images from ghcr.io instead of Docker Hub because
@@ -24,7 +24,7 @@ jobs:
   mirror:
     name: DockerHub mirror
     runs-on: ubuntu-24.04
-    if: github.repository == 'rust-lang/rust'
+    if: github.repository == 'Blyx-lang-space/blyx'
     permissions:
       # Needed to write to the ghcr.io registry
       packages: write

@@ -1,5 +1,4 @@
----
-name: Bootstrap (Rust Build System) Report
+name: Bootstrap (Blyx Build System) Report
 about: Issues encountered on bootstrap build system
 labels: C-bug, T-bootstrap
 ---

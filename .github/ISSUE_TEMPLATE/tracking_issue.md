@@ -1,6 +1,6 @@
 ---
 name: Tracking Issue
-about: A tracking issue for an accepted feature or RFC in Rust.
+about: A tracking issue for an accepted feature or RFC in Blyx.
 title: Tracking Issue for XXX
 labels: C-tracking-issue
 ---
@@ -19,7 +19,7 @@ Such a feature should also be labeled with e.g., `F-my_feature`.
 This label is used to associate issues (e.g., bugs and design questions) to the feature.
 -->
 
-This is a tracking issue for the RFC "XXX" (rust-lang/rfcs#NNN).
+This is a tracking issue for the RFC "XXX" (Blyx-lang-space/blyx-rfcs#NNN).
 The feature gate for the issue is `#![feature(FFF)]`.
 
 ### About tracking issues
@@ -38,19 +38,19 @@ implementing a feature, followed by a PR that stabilises the feature. However
 for larger features an implementation could be broken up into multiple PRs.
 -->
 
-- [ ] Implement the RFC (cc @rust-lang/XXX -- can anyone write up mentoring
+- [ ] Implement the RFC (cc @Blyx-lang-space/XXX -- can anyone write up mentoring
       instructions?)
 - [ ] Adjust documentation ([see instructions on rustc-dev-guide][doc-guide])
 - [ ] Style updates for any new syntax ([nightly-style-procedure])
   - [ ] Style team decision on new formatting
   - [ ] Formatting for new syntax has been added to the [Style Guide]
-  - [ ] (non-blocking) Formatting has been implemented in `rustfmt`
+  - [ ] (non-blocking) Formatting has been implemented in `blyxfmt`
 - [ ] Stabilization PR ([see instructions on rustc-dev-guide][stabilization-guide])
 
-[stabilization-guide]: https://rustc-dev-guide.rust-lang.org/stabilization_guide.html#stabilization-pr
-[doc-guide]: https://rustc-dev-guide.rust-lang.org/stabilization_guide.html#documentation-prs
-[nightly-style-procedure]: https://github.com/rust-lang/style-team/blob/main/nightly-style-procedure.md 
-[Style Guide]: https://github.com/rust-lang/rust/tree/HEAD/src/doc/style-guide
+[stabilization-guide]: https://blyx-lang.space
+[doc-guide]: https://blyx-lang.space
+[nightly-style-procedure]: https://github.com/Blyx-lang-space/style-team/blob/main/nightly-style-procedure.md 
+[Style Guide]: https://github.com/Blyx-lang-space/blyx/tree/HEAD/src/doc/style-guide
 
 ### Unresolved Questions
 <!--

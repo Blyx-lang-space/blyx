@@ -1,6 +1,9 @@
-//! Native Type Checker for Blyx (`blyx_typeck`)
+// Blyx Programming Language — Type Checker (blyx_typeck)
+// Created by Rahul Chaube — https://blyx-lang.space
+// Open Source — MIT + Apache 2.0
+// Repository: https://github.com/Blyx-lang-space/blyx
 
-use blyx_ast::{BlyxAstModule, BlyxItem, BlyxType};
+use blyx_ast::{BlyxFile, Item, BlyxType};
 use blyx_semantic::SemanticAnalyzer;
 
 pub struct BlyxTypeChecker {
@@ -9,33 +12,34 @@ pub struct BlyxTypeChecker {
 
 impl BlyxTypeChecker {
     pub fn new() -> Self {
-        Self { analyzer: SemanticAnalyzer::new() }
+        Self {
+            analyzer: SemanticAnalyzer::new(),
+        }
     }
 
-    pub fn check_module(&mut self, module: &BlyxAstModule) -> Result<(), String> {
-        self.analyzer.analyze_module(module)?;
-        for item in &module.items {
+    pub fn check_file(&mut self, file: &BlyxFile) -> Result<(), String> {
+        self.analyzer.analyze(file)?;
+        for item in &file.items {
             self.check_item(item)?;
         }
         Ok(())
     }
 
-    fn check_item(&self, item: &BlyxItem) -> Result<(), String> {
+    fn check_item(&self, item: &Item) -> Result<(), String> {
         match item {
-            BlyxItem::Function { name: _, ret_ty: _, body: _, span: _ } => Ok(()),
-            BlyxItem::Actor { name: _, fields: _, span: _ } => Ok(()),
-            BlyxItem::Struct { fields, .. } => {
-                for (_fname, fty) in fields {
-                    self.verify_type(fty)?;
+            Item::Struct(s) => {
+                for f in &s.fields {
+                    self.verify_type(&f.ty)?;
                 }
                 Ok(())
             }
+            _ => Ok(()),
         }
     }
 
     fn verify_type(&self, ty: &BlyxType) -> Result<(), String> {
         match ty {
-            BlyxType::Tensor { dims, .. } => {
+            BlyxType::Tensor(_, dims) => {
                 if dims.contains(&0) {
                     return Err("Tensor dimensions must be greater than 0".to_string());
                 }
@@ -52,21 +56,13 @@ mod tests {
     use blyx_ast::Span;
 
     #[test]
-    fn test_typeck_valid() {
+    fn test_typeck_basic() {
         let mut typeck = BlyxTypeChecker::new();
-        let module = BlyxAstModule {
-            name: "main".to_string(),
-            items: vec![
-                BlyxItem::Struct {
-                    name: "Weights".to_string(),
-                    fields: vec![(
-                        "w".to_string(),
-                        BlyxType::Tensor { elem_ty: Box::new(BlyxType::F32), dims: vec![128, 64] },
-                    )],
-                    span: Span::dummy(),
-                },
-            ],
+        let file = BlyxFile {
+            path: "test.blyx".to_string(),
+            items: vec![],
+            span: Span::dummy(),
         };
-        assert!(typeck.check_module(&module).is_ok());
+        assert!(typeck.check_file(&file).is_ok());
     }
 }

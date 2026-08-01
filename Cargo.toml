@@ -1,66 +1,34 @@
 [workspace]
 resolver = "2"
 members = [
-# tidy-alphabetical-start
-  "compiler/blyx_lexer",
-  "compiler/blyx_parser",
-  "compiler/blyx_ast",
-  "compiler/blyx_semantic",
-  "compiler/blyx_typeck",
-  "compiler/blyx_bir",
-  "compiler/blyxc",
-  "library/blyx",
-  "library/blyx-std",
-  "tools/blyxpkg",
-  "tools/blyxfmt",
-  "tools/blyx-analyzer",
-  "tools/blyxdoc",
-  "tools/blyxup",
-  "tools/blyxdbg",
-  "tools/blyxprof",
+    "compiler/blyx_lexer",
+    "compiler/blyx_parser",
+    "compiler/blyx_ast",
+    "compiler/blyx_semantic",
+    "compiler/blyx_typeck",
+    "compiler/blyx_bir",
+    "compiler/blyxc",
+    "library/blyx",
+    "library/blyx-std",
+    "tools/blyxpkg",
+    "tools/blyxfmt",
+    "tools/blyx-analyzer",
+    "tools/blyxdoc",
+    "tools/blyxup",
+    "tools/blyxdbg",
+    "tools/blyxprof",
 ]
 
-exclude = [
-  "build",
-  "compiler/rustc_codegen_cranelift",
-  "compiler/rustc_codegen_gcc",
-  "src/bootstrap",
-  "tests/rustdoc-gui",
-  # HACK(eddyb) This hardcodes the fact that our CI uses `/checkout/obj`.
-  "obj",
-]
+[workspace.package]
+version = "0.1.0-alpha"
+edition = "2024"
+authors = ["Rahul Chaube <rahulchaube1@gmail.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Blyx-lang-space/blyx"
+homepage = "https://blyx-lang.space"
 
-[profile.release.package.rustc_thread_pool]
-# The rustc fork of Rayon has deadlock detection code which intermittently
-# causes overflows in the CI (see https://github.com/rust-lang/rust/issues/90227)
-# so we turn overflow checks off for now.
-# FIXME: This workaround should be removed once #90227 is fixed.
-overflow-checks = false
-
-# These are very thin wrappers around executing lld with the right binary name.
-# Basically nothing within them can go wrong without having been explicitly logged anyway.
-# We ship these in every rustc tarball and even after compression they add up
-# to around 0.6MB of data every user needs to download (and 15MB on disk).
-[profile.release.package.lld-wrapper]
-debug = 0
-strip = true
-[profile.release.package.wasm-component-ld-wrapper]
-debug = 0
-strip = true
-
-# Bigint libraries are slow without optimization, speed up testing
-[profile.dev.package.test-float-parse]
+[profile.release]
 opt-level = 3
-
-# Speed up the binary as much as possible
-[profile.release.package.test-float-parse]
-opt-level = 3
+lto = true
 codegen-units = 1
-# FIXME: LTO cannot be enabled for binaries in a workspace
-# <https://github.com/rust-lang/cargo/issues/9330>
-# lto = true
-
-# If you want to use a crate with local modifications, you can set a path or git dependency here.
-# For git dependencies, also add your source to ALLOWED_SOURCES in src/tools/tidy/src/extdeps.rs.
-#[patch.crates-io]
-
+panic = "abort"

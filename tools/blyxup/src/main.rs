@@ -1,37 +1,17 @@
-//! Official Blyx Toolchain Installer (`blyxup`)
+// Blyx Toolchain Installer & Version Manager (blyxup)
+// Created by Rahul Chaube — https://blyx-lang.space
+// Open Source — MIT + Apache 2.0
+// Repository: https://github.com/Blyx-lang-space/blyx
 
-use clap::{Parser, Subcommand};
-
-#[derive(Parser)]
-#[command(name = "blyxup")]
-#[command(about = "Official Toolchain Version Installer for Blyx (https://blyx-lang.space)")]
-struct Cli {
-    #[command(subcommand)]
-    command: Commands,
-}
-
-#[derive(Subcommand)]
-enum Commands {
-    /// Install a toolchain channel (stable, beta, nightly)
-    Install { channel: String },
-    /// Update installed toolchains
-    Update,
-    /// Set default active toolchain
-    Default { channel: String },
-    /// List installed toolchains
-    List,
-}
+use std::env;
 
 fn main() {
-    let cli = Cli::parse();
-    match &cli.command {
-        Commands::Install { channel } => println!("Downloading and installing Blyx toolchain `{}` from https://blyx-lang.space...", channel),
-        Commands::Update => println!("Updating installed Blyx toolchains..."),
-        Commands::Default { channel } => println!("Set active toolchain to `{}`.", channel),
-        Commands::List => {
-            println!("Installed Blyx Toolchains:");
-            println!("  stable-x86_64-pc-windows-msvc (active)");
-            println!("  nightly-x86_64-pc-windows-msvc");
-        }
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        println!("blyxup — Official Toolchain Installer for Blyx v0.1.0-alpha");
+        println!("Created by Rahul Chaube — https://blyx-lang.space");
+        println!("Usage: blyxup <install|update|uninstall> [channel: stable|beta|nightly]");
+        return;
     }
+    println!("Running blyxup {} ...", args[1]);
 }

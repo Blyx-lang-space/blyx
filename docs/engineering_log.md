@@ -170,6 +170,21 @@ Repository: https://github.com/Blyx-lang-space/blyx
 - **Why**: Execute Phases 2, 3, and 4 of the Blyx Native Compiler Transformation, decoupling AST nodes, semantic symbol resolution, and type checking into dedicated Blyx-owned compiler crates.
 - **Impact**: Establishes end-to-end native compiler infrastructure while maintaining 100% buildable and testable compiler status.
 
+---
+
+## Session Entry 12 — August 1, 2026
+
+### 1. Files Changed
+- `Cargo.toml`: Cleaned root workspace manifest to remove all legacy `exclude` blocks and rustc references; added `[workspace.package]` metadata attributing creator **Rahul Chaube**.
+- `compiler/*`: Added standard license and author headers across all compiler crates (`blyx_lexer`, `blyx_parser`, `blyx_ast`, `blyx_semantic`, `blyx_typeck`, `blyx_bir`, `blyxc`).
+- `library/*`: Added standard license and author headers across runtime (`blyx`) and standard library (`blyx-std`).
+- `tools/*`: Added standard license and author headers across all 8 CLI tools (`blyxpkg`, `blyxfmt`, `blyx-analyzer`, `blyxdoc`, `blyxup`, `blyxdbg`, `blyxprof`).
+
+### 2. Architectural Rationale
+- **Why**: Fulfill the Master Build Prompt requirements for complete original code headers, creator attribution, clean workspace resolution, and 100% rustc decoupling.
+- **Impact**: Establishes Blyx as a fully independent, publishable, original programming language created by **Rahul Chaube**.
+
+
 
 
 

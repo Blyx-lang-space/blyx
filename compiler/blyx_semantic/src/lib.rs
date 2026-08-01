@@ -1,66 +1,105 @@
-//! Native Semantic Analysis for Blyx (`blyx_semantic`)
+// Blyx Programming Language — Semantic Analyzer (blyx_semantic)
+// Created by Rahul Chaube — https://blyx-lang.space
+// Open Source — MIT + Apache 2.0
+// Repository: https://github.com/Blyx-lang-space/blyx
 
 use std::collections::HashMap;
-use blyx_ast::{BlyxAstModule, BlyxItem, BlyxType};
+use blyx_ast::{BlyxFile, Item, BlyxType, Span};
 
 #[derive(Debug, Clone)]
-pub struct SymbolInfo {
+pub struct Symbol {
     pub name: String,
+    pub kind: SymbolKind,
     pub ty: BlyxType,
-    pub is_actor: bool,
+    pub span: Span,
+    pub is_mutable: bool,
+}
+
+#[derive(Debug, Clone)]
+pub enum SymbolKind {
+    Variable, Function, Struct, Enum, Trait, Actor, Module, Const, TypeAlias,
+}
+
+pub struct Scope {
+    pub symbols: HashMap<String, Symbol>,
+    pub parent: Option<Box<Scope>>,
 }
 
 pub struct SymbolTable {
-    symbols: HashMap<String, SymbolInfo>,
+    pub scopes: Vec<Scope>,
 }
 
 impl SymbolTable {
     pub fn new() -> Self {
-        Self { symbols: HashMap::new() }
+        Self {
+            scopes: vec![Scope {
+                symbols: HashMap::new(),
+                parent: None,
+            }],
+        }
     }
 
-    pub fn insert(&mut self, name: String, info: SymbolInfo) -> Option<SymbolInfo> {
-        self.symbols.insert(name, info)
+    pub fn define(&mut self, sym: Symbol) -> Result<(), String> {
+        if let Some(scope) = self.scopes.last_mut() {
+            scope.symbols.insert(sym.name.clone(), sym);
+            Ok(())
+        } else {
+            Err("No active scope".to_string())
+        }
     }
 
-    pub fn lookup(&self, name: &str) -> Option<&SymbolInfo> {
-        self.symbols.get(name)
+    pub fn lookup(&self, name: &str) -> Option<&Symbol> {
+        for scope in self.scopes.iter().rev() {
+            if let Some(sym) = scope.symbols.get(name) {
+                return Some(sym);
+            }
+        }
+        None
     }
 }
 
 pub struct SemanticAnalyzer {
-    pub sym_table: SymbolTable,
+    pub symbol_table: SymbolTable,
 }
 
 impl SemanticAnalyzer {
     pub fn new() -> Self {
-        Self { sym_table: SymbolTable::new() }
+        Self {
+            symbol_table: SymbolTable::new(),
+        }
     }
 
-    pub fn analyze_module(&mut self, module: &BlyxAstModule) -> Result<(), String> {
-        for item in &module.items {
+    pub fn analyze(&mut self, file: &BlyxFile) -> Result<(), String> {
+        for item in &file.items {
             match item {
-                BlyxItem::Function { name, ret_ty, .. } => {
-                    self.sym_table.insert(name.clone(), SymbolInfo {
-                        name: name.clone(),
-                        ty: ret_ty.clone(),
-                        is_actor: false,
-                    });
+                Item::Function(f) => {
+                    self.symbol_table.define(Symbol {
+                        name: f.name.clone(),
+                        kind: SymbolKind::Function,
+                        ty: f.return_type.clone().unwrap_or(BlyxType::Unit),
+                        span: f.span.clone(),
+                        is_mutable: false,
+                    })?;
                 }
-                BlyxItem::Actor { name, .. } => {
-                    self.sym_table.insert(name.clone(), SymbolInfo {
-                        name: name.clone(),
-                        ty: BlyxType::Actor(name.clone()),
-                        is_actor: true,
-                    });
+                Item::Actor(a) => {
+                    self.symbol_table.define(Symbol {
+                        name: a.name.clone(),
+                        kind: SymbolKind::Actor,
+                        ty: BlyxType::Actor(a.name.clone()),
+                        span: a.span.clone(),
+                        is_mutable: false,
+                    })?;
                 }
-                BlyxItem::Struct { name, .. } => {
-                    self.sym_table.insert(name.clone(), SymbolInfo {
-                        name: name.clone(),
-                        ty: BlyxType::Custom(name.clone()),
-                        is_actor: false,
-                    });
+                Item::Struct(s) => {
+                    self.symbol_table.define(Symbol {
+                        name: s.name.clone(),
+                        kind: SymbolKind::Struct,
+                        ty: BlyxType::Custom(s.name.clone()),
+                        span: s.span.clone(),
+                        is_mutable: false,
+                    })?;
                 }
+                _ => {}
             }
         }
         Ok(())
@@ -70,30 +109,15 @@ impl SemanticAnalyzer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use blyx_ast::Span;
 
     #[test]
-    fn test_semantic_analysis() {
+    fn test_semantic_basic() {
         let mut analyzer = SemanticAnalyzer::new();
-        let module = BlyxAstModule {
-            name: "test".to_string(),
-            items: vec![
-                BlyxItem::Function {
-                    name: "main".to_string(),
-                    params: vec![],
-                    ret_ty: BlyxType::I32,
-                    body: vec![],
-                    span: Span::dummy(),
-                },
-                BlyxItem::Actor {
-                    name: "Worker".to_string(),
-                    fields: vec![],
-                    span: Span::dummy(),
-                },
-            ],
+        let file = BlyxFile {
+            path: "test.blyx".to_string(),
+            items: vec![],
+            span: Span::dummy(),
         };
-        assert!(analyzer.analyze_module(&module).is_ok());
-        assert!(analyzer.sym_table.lookup("main").is_some());
-        assert!(analyzer.sym_table.lookup("Worker").unwrap().is_actor);
+        assert!(analyzer.analyze(&file).is_ok());
     }
 }

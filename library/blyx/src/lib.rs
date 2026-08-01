@@ -1,31 +1,9 @@
-//! Blyx Official Runtime System (`blyx`)
-//! Official Domain: https://blyx-lang.space
+// Blyx Core Runtime System (blyx)
+// Created by Rahul Chaube — https://blyx-lang.space
+// Open Source — MIT + Apache 2.0
+// Repository: https://github.com/Blyx-lang-space/blyx
 
-pub mod startup {
-    pub fn init_runtime() {
-        eprintln!("[blyx] Blyx runtime initialized.");
-    }
-}
+pub mod actor;
+pub mod runtime;
 
-pub mod actor_scheduler {
-    pub struct ActorScheduler;
-
-    impl ActorScheduler {
-        pub fn new() -> Self {
-            ActorScheduler
-        }
-
-        pub fn spawn_actor<F>(&self, _f: F)
-        where
-            F: FnOnce() + Send + 'static,
-        {
-            std::thread::spawn(_f);
-        }
-    }
-}
-
-pub mod panic_handler {
-    pub fn handle_panic(info: &std::panic::PanicHookInfo) {
-        eprintln!("[blyx panic]: {}", info);
-    }
-}
+pub use runtime::init_runtime;

@@ -1,18 +1,17 @@
-//! Official Blyx Performance Profiler (`blyxprof`)
+// Blyx Performance Profiler (blyxprof)
+// Created by Rahul Chaube — https://blyx-lang.space
+// Open Source — MIT + Apache 2.0
+// Repository: https://github.com/Blyx-lang-space/blyx
 
-use clap::Parser;
-
-#[derive(Parser)]
-#[command(name = "blyxprof")]
-#[command(about = "Official Performance Profiler for Blyx (https://blyx-lang.space)")]
-struct Cli {
-    /// Command or binary to profile
-    binary: String,
-}
+use std::env;
 
 fn main() {
-    let cli = Cli::parse();
-    println!("Blyx Performance Profiler (`blyxprof` v0.1.0)");
-    println!("Profiling CPU, Memory Allocations, GPU Kernels, and Actor Messages for `{}`...", cli.binary);
-    println!("Profile report generated: flamegraph.svg, memory_allocations.json");
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        println!("blyxprof — Official Profiler for Blyx v0.1.0-alpha");
+        println!("Created by Rahul Chaube — https://blyx-lang.space");
+        println!("Usage: blyxprof <binary>");
+        return;
+    }
+    println!("Profiling {} ...", args[1]);
 }

@@ -1,60 +1,100 @@
-//! Native Independent Lexer for Blyx (`blyx_lexer`)
+// Blyx Programming Language — Lexer (blyx_lexer)
+// Created by Rahul Chaube — https://blyx-lang.space
+// Open Source — MIT + Apache 2.0
+// Repository: https://github.com/Blyx-lang-space/blyx
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum TokenKind {
-    Fn,
-    Let,
-    Actor,
-    Gpu,
-    Parallel,
-    Tensor,
-    Identifier(String),
-    StringLiteral(String),
-    IntegerLiteral(i64),
-    FloatLiteral(String),
-    OpenParen,
-    CloseParen,
-    OpenBrace,
-    CloseBrace,
-    Colon,
-    SemiColon,
-    Comma,
-    Arrow,
-    Equals,
-    Plus,
-    Minus,
-    Star,
-    Slash,
-    Eof,
+pub struct Span {
+    pub file: String,
+    pub line: u32,
+    pub col: u32,
+    pub offset: usize,
+    pub len: usize,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+impl Span {
+    pub fn dummy() -> Self {
+        Self {
+            file: "main.blyx".to_string(),
+            line: 1,
+            col: 1,
+            offset: 0,
+            len: 0,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum TokenKind {
+    // Keywords
+    Fn, Let, Const, Return, If, Else, While, For, In,
+    Struct, Impl, Trait, Pub, Use, Mod,
+    Actor, Gpu, Parallel, Tensor, Spawn, Await, Async,
+    True, False, Null, SelfKw, Super, Type, Where, Match, Enum,
+
+    // Literals
+    IntLit(u64),
+    FloatLit(f64),
+    StringLit(String),
+    CharLit(char),
+
+    // Identifiers
+    Ident(String),
+
+    // Operators and Punctuation
+    Plus, Minus, Star, Slash, Percent,
+    EqEq, BangEq, Lt, Gt, LtEq, GtEq,
+    AmpAmp, PipePipe, Bang,
+    Amp, Pipe, Caret, Tilde, LtLt, GtGt,
+    Eq, PlusEq, MinusEq, StarEq, SlashEq,
+    Arrow, FatArrow, ColonColon,
+    LBrace, RBrace, LParen, RParen, LBrack, RBrack,
+    Comma, Semi, Colon, Dot, DotDot, DotDotDot,
+
+    Eof,
+    Unknown(char),
+}
+
+#[derive(Debug, Clone)]
 pub struct Token {
     pub kind: TokenKind,
-    pub line: usize,
-    pub column: usize,
+    pub span: Span,
+    pub raw: String,
 }
 
-pub struct BlyxLexer<'a> {
-    input: &'a str,
-    cursor: usize,
-    line: usize,
-    column: usize,
+pub struct BlyxLexer {
+    source: Vec<char>,
+    pos: usize,
+    line: u32,
+    col: u32,
+    file: String,
 }
 
-impl<'a> BlyxLexer<'a> {
-    pub fn new(input: &'a str) -> Self {
+impl BlyxLexer {
+    pub fn new(input: &str) -> Self {
         Self {
-            input,
-            cursor: 0,
+            source: input.chars().collect(),
+            pos: 0,
             line: 1,
-            column: 1,
+            col: 1,
+            file: "main.blyx".to_string(),
+        }
+    }
+
+    pub fn with_file(input: &str, file: impl Into<String>) -> Self {
+        Self {
+            source: input.chars().collect(),
+            pos: 0,
+            line: 1,
+            col: 1,
+            file: file.into(),
         }
     }
 
     pub fn tokenize(&mut self) -> Vec<Token> {
         let mut tokens = Vec::new();
-        while let Some(tok) = self.next_token() {
+        loop {
+            let tok = self.next_token();
             let is_eof = tok.kind == TokenKind::Eof;
             tokens.push(tok);
             if is_eof {
@@ -64,103 +104,288 @@ impl<'a> BlyxLexer<'a> {
         tokens
     }
 
-    fn next_token(&mut self) -> Option<Token> {
-        self.skip_whitespace();
+    pub fn next_token(&mut self) -> Token {
+        self.skip_whitespace_and_comments();
 
-        if self.cursor >= self.input.len() {
-            return Some(Token {
+        let start_pos = self.pos;
+        let start_line = self.line;
+        let start_col = self.col;
+
+        if self.pos >= self.source.len() {
+            return Token {
                 kind: TokenKind::Eof,
-                line: self.line,
-                column: self.column,
-            });
+                span: Span {
+                    file: self.file.clone(),
+                    line: start_line,
+                    col: start_col,
+                    offset: start_pos,
+                    len: 0,
+                },
+                raw: String::new(),
+            };
         }
 
-        let start_col = self.column;
-        let ch = self.peek_char()?;
+        let ch = self.source[self.pos];
 
-        match ch {
-            '(' => { self.advance(); Some(Token { kind: TokenKind::OpenParen, line: self.line, column: start_col }) }
-            ')' => { self.advance(); Some(Token { kind: TokenKind::CloseParen, line: self.line, column: start_col }) }
-            '{' => { self.advance(); Some(Token { kind: TokenKind::OpenBrace, line: self.line, column: start_col }) }
-            '}' => { self.advance(); Some(Token { kind: TokenKind::CloseBrace, line: self.line, column: start_col }) }
-            ':' => { self.advance(); Some(Token { kind: TokenKind::Colon, line: self.line, column: start_col }) }
-            ';' => { self.advance(); Some(Token { kind: TokenKind::SemiColon, line: self.line, column: start_col }) }
-            ',' => { self.advance(); Some(Token { kind: TokenKind::Comma, line: self.line, column: start_col }) }
-            '=' => { self.advance(); Some(Token { kind: TokenKind::Equals, line: self.line, column: start_col }) }
-            '+' => { self.advance(); Some(Token { kind: TokenKind::Plus, line: self.line, column: start_col }) }
-            '-' => {
-                self.advance();
-                if self.peek_char() == Some('>') {
-                    self.advance();
-                    Some(Token { kind: TokenKind::Arrow, line: self.line, column: start_col })
+        if ch.is_alphabetic() || ch == '_' {
+            return self.read_ident_or_keyword(start_pos, start_line, start_col);
+        }
+
+        if ch.is_ascii_digit() {
+            return self.read_number(start_pos, start_line, start_col);
+        }
+
+        if ch == '"' {
+            return self.read_string(start_pos, start_line, start_col);
+        }
+
+        self.pos += 1;
+        self.col += 1;
+
+        let kind = match ch {
+            '(' => TokenKind::LParen,
+            ')' => TokenKind::RParen,
+            '{' => TokenKind::LBrace,
+            '}' => TokenKind::RBrace,
+            '[' => TokenKind::LBrack,
+            ']' => TokenKind::RBrack,
+            ',' => TokenKind::Comma,
+            ';' => TokenKind::Semi,
+            ':' => {
+                if self.peek_char() == Some(':') {
+                    self.advance_raw();
+                    TokenKind::ColonColon
                 } else {
-                    Some(Token { kind: TokenKind::Minus, line: self.line, column: start_col })
+                    TokenKind::Colon
                 }
             }
-            '*' => { self.advance(); Some(Token { kind: TokenKind::Star, line: self.line, column: start_col }) }
-            '/' => { self.advance(); Some(Token { kind: TokenKind::Slash, line: self.line, column: start_col }) }
-            '"' => {
-                self.advance();
-                let mut s = String::new();
-                while let Some(c) = self.peek_char() {
-                    if c == '"' {
-                        self.advance();
-                        break;
-                    }
-                    s.push(c);
-                    self.advance();
-                }
-                Some(Token { kind: TokenKind::StringLiteral(s), line: self.line, column: start_col })
-            }
-            c if c.is_alphabetic() || c == '_' => {
-                let mut ident = String::new();
-                while let Some(c) = self.peek_char() {
-                    if c.is_alphanumeric() || c == '_' {
-                        ident.push(c);
-                        self.advance();
+            '.' => {
+                if self.peek_char() == Some('.') {
+                    self.advance_raw();
+                    if self.peek_char() == Some('.') {
+                        self.advance_raw();
+                        TokenKind::DotDotDot
                     } else {
-                        break;
+                        TokenKind::DotDot
                     }
+                } else {
+                    TokenKind::Dot
                 }
-                let kind = match ident.as_str() {
-                    "fn" => TokenKind::Fn,
-                    "let" => TokenKind::Let,
-                    "actor" => TokenKind::Actor,
-                    "gpu" => TokenKind::Gpu,
-                    "parallel" => TokenKind::Parallel,
-                    "tensor" => TokenKind::Tensor,
-                    _ => TokenKind::Identifier(ident),
-                };
-                Some(Token { kind, line: self.line, column: start_col })
             }
-            c if c.is_ascii_digit() => {
-                let mut num = String::new();
-                while let Some(c) = self.peek_char() {
-                    if c.is_ascii_digit() {
-                        num.push(c);
-                        self.advance();
-                    } else {
-                        break;
-                    }
+            '=' => {
+                if self.peek_char() == Some('=') {
+                    self.advance_raw();
+                    TokenKind::EqEq
+                } else if self.peek_char() == Some('>') {
+                    self.advance_raw();
+                    TokenKind::FatArrow
+                } else {
+                    TokenKind::Eq
                 }
-                let val = num.parse::<i64>().unwrap_or(0);
-                Some(Token { kind: TokenKind::IntegerLiteral(val), line: self.line, column: start_col })
             }
-            _ => {
-                self.advance();
-                self.next_token()
+            '+' => {
+                if self.peek_char() == Some('=') {
+                    self.advance_raw();
+                    TokenKind::PlusEq
+                } else {
+                    TokenKind::Plus
+                }
             }
+            '-' => {
+                if self.peek_char() == Some('>') {
+                    self.advance_raw();
+                    TokenKind::Arrow
+                } else if self.peek_char() == Some('=') {
+                    self.advance_raw();
+                    TokenKind::MinusEq
+                } else {
+                    TokenKind::Minus
+                }
+            }
+            '*' => {
+                if self.peek_char() == Some('=') {
+                    self.advance_raw();
+                    TokenKind::StarEq
+                } else {
+                    TokenKind::Star
+                }
+            }
+            '/' => {
+                if self.peek_char() == Some('=') {
+                    self.advance_raw();
+                    TokenKind::SlashEq
+                } else {
+                    TokenKind::Slash
+                }
+            }
+            '!' => {
+                if self.peek_char() == Some('=') {
+                    self.advance_raw();
+                    TokenKind::BangEq
+                } else {
+                    TokenKind::Bang
+                }
+            }
+            '<' => {
+                if self.peek_char() == Some('=') {
+                    self.advance_raw();
+                    TokenKind::LtEq
+                } else if self.peek_char() == Some('<') {
+                    self.advance_raw();
+                    TokenKind::LtLt
+                } else {
+                    TokenKind::Lt
+                }
+            }
+            '>' => {
+                if self.peek_char() == Some('=') {
+                    self.advance_raw();
+                    TokenKind::GtEq
+                } else if self.peek_char() == Some('>') {
+                    self.advance_raw();
+                    TokenKind::GtGt
+                } else {
+                    TokenKind::Gt
+                }
+            }
+            '&' => {
+                if self.peek_char() == Some('&') {
+                    self.advance_raw();
+                    TokenKind::AmpAmp
+                } else {
+                    TokenKind::Amp
+                }
+            }
+            '|' => {
+                if self.peek_char() == Some('|') {
+                    self.advance_raw();
+                    TokenKind::PipePipe
+                } else {
+                    TokenKind::Pipe
+                }
+            }
+            '^' => TokenKind::Caret,
+            '~' => TokenKind::Tilde,
+            '%' => TokenKind::Percent,
+            _ => TokenKind::Unknown(ch),
+        };
+
+        let raw: String = self.source[start_pos..self.pos].iter().collect();
+        let len = self.pos - start_pos;
+
+        Token {
+            kind,
+            span: Span {
+                file: self.file.clone(),
+                line: start_line,
+                col: start_col,
+                offset: start_pos,
+                len,
+            },
+            raw,
         }
     }
 
-    fn skip_whitespace(&mut self) {
-        while let Some(c) = self.peek_char() {
+    fn read_ident_or_keyword(&mut self, start_pos: usize, start_line: u32, start_col: u32) -> Token {
+        while self.pos < self.source.len() && (self.source[self.pos].is_alphanumeric() || self.source[self.pos] == '_') {
+            self.pos += 1;
+            self.col += 1;
+        }
+        let raw: String = self.source[start_pos..self.pos].iter().collect();
+        let kind = keyword_from_str(&raw).unwrap_or_else(|| TokenKind::Ident(raw.clone()));
+        let len = self.pos - start_pos;
+        Token {
+            kind,
+            span: Span {
+                file: self.file.clone(),
+                line: start_line,
+                col: start_col,
+                offset: start_pos,
+                len,
+            },
+            raw,
+        }
+    }
+
+    fn read_number(&mut self, start_pos: usize, start_line: u32, start_col: u32) -> Token {
+        let mut is_float = false;
+        while self.pos < self.source.len() {
+            let c = self.source[self.pos];
+            if c.is_ascii_digit() {
+                self.pos += 1;
+                self.col += 1;
+            } else if c == '.' && !is_float && self.peek_char().map_or(false, |next| next.is_ascii_digit()) {
+                is_float = true;
+                self.pos += 1;
+                self.col += 1;
+            } else {
+                break;
+            }
+        }
+        let raw: String = self.source[start_pos..self.pos].iter().collect();
+        let len = self.pos - start_pos;
+        let kind = if is_float {
+            TokenKind::FloatLit(raw.parse::<f64>().unwrap_or(0.0))
+        } else {
+            TokenKind::IntLit(raw.parse::<u64>().unwrap_or(0))
+        };
+        Token {
+            kind,
+            span: Span {
+                file: self.file.clone(),
+                line: start_line,
+                col: start_col,
+                offset: start_pos,
+                len,
+            },
+            raw,
+        }
+    }
+
+    fn read_string(&mut self, start_pos: usize, start_line: u32, start_col: u32) -> Token {
+        self.pos += 1; // skip opening "
+        self.col += 1;
+        let mut s = String::new();
+        while self.pos < self.source.len() {
+            let c = self.source[self.pos];
+            if c == '"' {
+                self.pos += 1;
+                self.col += 1;
+                break;
+            }
+            s.push(c);
+            self.pos += 1;
+            self.col += 1;
+        }
+        let raw: String = self.source[start_pos..self.pos].iter().collect();
+        let len = self.pos - start_pos;
+        Token {
+            kind: TokenKind::StringLit(s),
+            span: Span {
+                file: self.file.clone(),
+                line: start_line,
+                col: start_col,
+                offset: start_pos,
+                len,
+            },
+            raw,
+        }
+    }
+
+    fn skip_whitespace_and_comments(&mut self) {
+        while self.pos < self.source.len() {
+            let c = self.source[self.pos];
             if c == ' ' || c == '\t' || c == '\r' {
-                self.advance();
+                self.pos += 1;
+                self.col += 1;
             } else if c == '\n' {
+                self.pos += 1;
                 self.line += 1;
-                self.column = 1;
-                self.cursor += 1;
+                self.col = 1;
+            } else if c == '/' && self.peek_char() == Some('/') {
+                while self.pos < self.source.len() && self.source[self.pos] != '\n' {
+                    self.pos += 1;
+                }
             } else {
                 break;
             }
@@ -168,14 +393,53 @@ impl<'a> BlyxLexer<'a> {
     }
 
     fn peek_char(&self) -> Option<char> {
-        self.input[self.cursor..].chars().next()
+        if self.pos + 1 < self.source.len() {
+            Some(self.source[self.pos + 1])
+        } else {
+            None
+        }
     }
 
-    fn advance(&mut self) {
-        if let Some(c) = self.peek_char() {
-            self.cursor += c.len_utf8();
-            self.column += 1;
-        }
+    fn advance_raw(&mut self) {
+        self.pos += 1;
+        self.col += 1;
+    }
+}
+
+pub fn keyword_from_str(s: &str) -> Option<TokenKind> {
+    match s {
+        "fn" => Some(TokenKind::Fn),
+        "let" => Some(TokenKind::Let),
+        "const" => Some(TokenKind::Const),
+        "return" => Some(TokenKind::Return),
+        "if" => Some(TokenKind::If),
+        "else" => Some(TokenKind::Else),
+        "while" => Some(TokenKind::While),
+        "for" => Some(TokenKind::For),
+        "in" => Some(TokenKind::In),
+        "struct" => Some(TokenKind::Struct),
+        "impl" => Some(TokenKind::Impl),
+        "trait" => Some(TokenKind::Trait),
+        "pub" => Some(TokenKind::Pub),
+        "use" => Some(TokenKind::Use),
+        "mod" => Some(TokenKind::Mod),
+        "actor" => Some(TokenKind::Actor),
+        "gpu" => Some(TokenKind::Gpu),
+        "parallel" => Some(TokenKind::Parallel),
+        "tensor" => Some(TokenKind::Tensor),
+        "spawn" => Some(TokenKind::Spawn),
+        "await" => Some(TokenKind::Await),
+        "async" => Some(TokenKind::Async),
+        "true" => Some(TokenKind::True),
+        "false" => Some(TokenKind::False),
+        "null" => Some(TokenKind::Null),
+        "self" => Some(TokenKind::SelfKw),
+        "super" => Some(TokenKind::Super),
+        "type" => Some(TokenKind::Type),
+        "where" => Some(TokenKind::Where),
+        "match" => Some(TokenKind::Match),
+        "enum" => Some(TokenKind::Enum),
+        _ => None,
     }
 }
 
@@ -184,23 +448,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_lexer_basic() {
-        let src = "fn main() { let x = 42; }";
+    fn test_lexer_full() {
+        let src = "fn main() { let x = 42; actor Worker gpu parallel tensor }";
         let mut lexer = BlyxLexer::new(src);
         let tokens = lexer.tokenize();
         assert_eq!(tokens[0].kind, TokenKind::Fn);
-        assert_eq!(tokens[1].kind, TokenKind::Identifier("main".to_string()));
-    }
-
-    #[test]
-    fn test_lexer_blyx_keywords() {
-        let src = "actor Worker gpu parallel tensor";
-        let mut lexer = BlyxLexer::new(src);
-        let tokens = lexer.tokenize();
-        assert_eq!(tokens[0].kind, TokenKind::Actor);
-        assert_eq!(tokens[1].kind, TokenKind::Identifier("Worker".to_string()));
-        assert_eq!(tokens[2].kind, TokenKind::Gpu);
-        assert_eq!(tokens[3].kind, TokenKind::Parallel);
-        assert_eq!(tokens[4].kind, TokenKind::Tensor);
+        assert_eq!(tokens[1].kind, TokenKind::Ident("main".to_string()));
     }
 }

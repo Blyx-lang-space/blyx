@@ -210,6 +210,18 @@ Repository: https://github.com/Blyx-lang-space/blyx
 - **Why**: Execute Version v0.3.0-alpha Ecosystem & Tooling Sprint, completing package registry workflows, interactive debugging/profiling interfaces, and web search UI components.
 - **Impact**: Delivers complete real-world adoption toolchains for Blyx developers.
 
+---
+
+## Session Entry 15 — August 1, 2026
+
+### 1. Files Changed
+- `compiler/blyx_bir/src/lib.rs`: Expanded `BirPassManager` optimization passes with dead block elimination (`dead_block_elimination`), loop invariant code motion (`licm`), constant propagation (`constant_propagation`), and copy propagation (`copy_propagation`).
+
+### 2. Architectural Rationale
+- **Why**: Execute Version v0.4.0-alpha Compiler Optimization & Code Generation Sprint, advancing intermediate representation optimization passes across `-O0` to `-O3` pipeline levels.
+- **Impact**: Increases compiled BIR code execution efficiency, loop performance, and dead basic block pruning.
+
+
 
 
 

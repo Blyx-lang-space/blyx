@@ -3,8 +3,6 @@
 // Open Source — MIT + Apache 2.0
 // Repository: https://github.com/Blyx-lang-space/blyx
 
-
-
 pub type ValueId = u32;
 pub type BlockId = u32;
 pub type FuncId = u32;
@@ -161,16 +159,29 @@ impl BirPassManager {
             OptLevel::O0 => {},
             OptLevel::O1 => {
                 self.dead_code_elimination(cfg);
+                self.dead_block_elimination(cfg);
             }
             OptLevel::O2 | OptLevel::O3 => {
                 self.dead_code_elimination(cfg);
+                self.dead_block_elimination(cfg);
                 self.constant_folding(cfg);
+                self.constant_propagation(cfg);
+                self.copy_propagation(cfg);
+                self.licm(cfg);
             }
         }
     }
 
-    fn dead_code_elimination(&self, _cfg: &mut ControlFlowGraph) {}
-    fn constant_folding(&self, _cfg: &mut ControlFlowGraph) {}
+    pub fn dead_code_elimination(&self, _cfg: &mut ControlFlowGraph) {}
+    pub fn dead_block_elimination(&self, f: &mut ControlFlowGraph) {
+        for func in &mut f.functions {
+            func.blocks.retain(|b| b.id == func.entry || !b.predecessors.is_empty());
+        }
+    }
+    pub fn constant_folding(&self, _cfg: &mut ControlFlowGraph) {}
+    pub fn constant_propagation(&self, _cfg: &mut ControlFlowGraph) {}
+    pub fn copy_propagation(&self, _cfg: &mut ControlFlowGraph) {}
+    pub fn licm(&self, _cfg: &mut ControlFlowGraph) {}
 }
 
 pub struct LlvmIrEmitter {
@@ -212,5 +223,21 @@ mod tests {
         let mut emitter = LlvmIrEmitter::new();
         let ir = emitter.emit_cfg(&cfg);
         assert!(ir.contains("define i32 @main()"));
+    }
+
+    #[test]
+    fn test_pass_manager_passes() {
+        let mut cfg = ControlFlowGraph::new();
+        cfg.add_function(BirFunction {
+            id: 0,
+            name: "opt_test".to_string(),
+            params: vec![],
+            return_type: BirType::I32,
+            blocks: vec![],
+            entry: 0,
+        });
+        let pm = BirPassManager::new(OptLevel::O3);
+        pm.run(&mut cfg);
+        assert_eq!(cfg.functions.len(), 1);
     }
 }

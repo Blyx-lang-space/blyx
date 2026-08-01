@@ -132,6 +132,18 @@ Repository: https://github.com/Blyx-lang-space/blyx
 - **Why**: Prepare automated release workflows and VS Code marketplace packaging for the public Alpha release.
 - **Impact**: Enables automated cross-platform binary package publication for `x86_64-pc-windows-msvc`, `x86_64-unknown-linux-gnu`, and `aarch64-apple-darwin`.
 
+---
+
+## Session Entry 9 — August 1, 2026
+
+### 1. Files Changed
+- `website/next.config.mjs`: Configured Next.js static export (`output: 'export'`, `unoptimized: true`) for Vercel and GitHub Pages production deployment.
+
+### 2. Architectural Rationale
+- **Why**: Ensure zero-configuration static site deployment for `https://blyx-lang.space`.
+- **Impact**: Production deployment readiness across all web subdomains (`https://blyx-lang.space`, `play.blyx-lang.space`, `docs.blyx-lang.space`).
+
+
 
 
 

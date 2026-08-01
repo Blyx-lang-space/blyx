@@ -1,0 +1,83 @@
+{
+  "Blyx Function": {
+    "prefix": "fn",
+    "body": [
+      "fn ${1:name}(${2:params}) -> ${3:i32} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Function definition"
+  },
+  "Blyx Main Function": {
+    "prefix": "main",
+    "body": [
+      "fn main() {",
+      "    ${0:println!(\"Hello, World from Blyx!\");}",
+      "}"
+    ],
+    "description": "Main entry point function"
+  },
+  "Blyx Actor": {
+    "prefix": "actor",
+    "body": [
+      "actor ${1:Worker} {",
+      "    fn handle(self: &mut ${1:Worker}, msg: ${2:Message}) {",
+      "        ${0}",
+      "    }",
+      "}"
+    ],
+    "description": "Lock-free actor declaration"
+  },
+  "Blyx GPU Block": {
+    "prefix": "gpu",
+    "body": [
+      "gpu {",
+      "    ${0}",
+      "};"
+    ],
+    "description": "Heterogeneous GPU execution block"
+  },
+  "Blyx Parallel Block": {
+    "prefix": "parallel",
+    "body": [
+      "parallel {",
+      "    ${0}",
+      "};"
+    ],
+    "description": "Work-stealing parallel execution block"
+  },
+  "Blyx Tensor": {
+    "prefix": "tensor",
+    "body": [
+      "let ${1:weights}: tensor<${2:f32}, ${3:128}, ${4:64}> = tensor::zeros();"
+    ],
+    "description": "Static tensor matrix definition"
+  },
+  "Blyx Struct": {
+    "prefix": "struct",
+    "body": [
+      "struct ${1:Name} {",
+      "    ${2:field}: ${3:i32},",
+      "}"
+    ],
+    "description": "Struct definition"
+  },
+  "Blyx Enum": {
+    "prefix": "enum",
+    "body": [
+      "enum ${1:Name} {",
+      "    ${2:Variant},",
+      "}"
+    ],
+    "description": "Enum definition"
+  },
+  "Blyx Match": {
+    "prefix": "match",
+    "body": [
+      "match ${1:expr} {",
+      "    ${2:pattern} => ${3:val},",
+      "}"
+    ],
+    "description": "Pattern matching expression"
+  }
+}

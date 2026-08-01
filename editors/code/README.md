@@ -1,41 +1,41 @@
-# Blyx Language Support for VS Code
+# BLYX Language — VS Code Extension
 
-Official VS Code extension for the [Blyx programming language](https://blyx-lang.space).
+Official VS Code language support for the [Blyx programming language](https://blyx-lang.space).
 
-**Created by Rahul Chaube** — [@RahulChaube_](https://x.com/RahulChaube_)
+**Publisher**: `RahulChaube`  
+**Created by**: **Rahul Chaube** — [@RahulChaube_](https://x.com/RahulChaube_)  
+**Repository**: [https://github.com/Blyx-lang-space/blyx](https://github.com/Blyx-lang-space/blyx)
+
+---
 
 ## Features
 
-- **Syntax Highlighting** — Full grammar for `.blyx` files including `actor`, `tensor`, `gpu`, `parallel` keywords
-- **Language Server** — Real-time diagnostics, hover info, go-to-definition, completions via `blyx-analyzer`
-- **Format on Save** — Automatic code formatting via `blyxfmt`
-- **Snippets** — Code snippets for common patterns
+- **Syntax Highlighting**: Complete TextMate grammar for `.blyx` source files, including `actor`, `tensor<T, D1, D2>`, `gpu { }`, `parallel { }`, `spawn`, `await`, `async`, `match`, `enum`, `trait`, and `struct`.
+- **Language Server Protocol**: Real-time diagnostic reporting, hover tooltips, definition jump, and code completion via `blyx-analyzer`.
+- **Formatting**: Automated code formatting via `blyxfmt`.
+- **Code Snippets**: Built-in code snippets for functions, actors, tensor declarations, GPU blocks, structs, enums, and pattern matching.
 
-## Requirements
+---
 
-Install the Blyx toolchain first:
+## Installation
+
+Install the Blyx toolchain via `blyxup` or shell installer:
 
 ```sh
 curl -sSf https://blyx-lang.space/install.sh | sh
 ```
 
-## Extension Settings
+Then install the **BLYX Language** extension from the VS Code Marketplace.
 
-- `blyx.server.path`: Path to `blyx-analyzer` binary (auto-detected from PATH by default)
-- `blyx.format.onSave`: Enable format-on-save (default: `true`)
-
-## Getting Started
-
-1. Install the extension.
-2. Open a `.blyx` file.
-3. Start writing Blyx code — syntax highlighting activates automatically.
+---
 
 ## Links
 
-- [Official Website](https://blyx-lang.space/)
-- [GitHub Repository](https://github.com/Blyx-lang-space/blyx)
-- [Interactive Playground](https://play.blyx-lang.space/)
-- [Language Book](https://blyx-lang.space/learn)
+- **Official Website**: [https://blyx-lang.space](https://blyx-lang.space)
+- **Interactive Playground**: [https://play.blyx-lang.space](https://play.blyx-lang.space)
+- **GitHub Repository**: [https://github.com/Blyx-lang-space/blyx](https://github.com/Blyx-lang-space/blyx)
+
+---
 
 ## License
 

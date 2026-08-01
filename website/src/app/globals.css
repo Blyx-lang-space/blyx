@@ -3,12 +3,80 @@
 @tailwind utilities;
 
 :root {
-  --bg-dark: #07090e;
-  --primary: #00f2fe;
-  --secondary: #7f00ff;
+  --blyx-void: #05080f;
+  --blyx-surface: #0d1420;
+  --blyx-border: #1a2535;
+  --blyx-cyan: #00e5ff;
+  --blyx-purple: #8b5cf6;
+  --blyx-text: #e8edf5;
+  --blyx-muted: #6b7a96;
+  --blyx-green: #00ff88;
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: #f8fafc;
+  background-color: var(--blyx-void);
+  color: var(--blyx-text);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+code, pre, .mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@keyframes bir-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.bir-stream {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bir-stream-inner {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #00e5ff;
+  opacity: 0.07;
+  line-height: 1.8;
+  padding: 0 40px;
+  white-space: pre;
+  animation: bir-scroll 30s linear infinite;
+}
+
+.bir-stream::before,
+.bir-stream::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 120px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bir-stream::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--blyx-void), transparent);
+}
+
+.bir-stream::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--blyx-void), transparent);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
 }

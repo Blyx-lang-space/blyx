@@ -119,6 +119,20 @@ Repository: https://github.com/Blyx-lang-space/blyx
 - **Why**: Complete the enterprise ecosystem v5 component library and governance route coverage.
 - **Impact**: Production-ready user experience across all web portal routes (`https://blyx-lang.space`).
 
+---
+
+## Session Entry 8 — August 1, 2026
+
+### 1. Files Changed
+- `.github/workflows/release.yml`: Created automated GitHub Releases CI/CD workflow building binary packages and generating SHA256 checksums on tag push.
+- `editors/code/package.json`: Updated extension icon path to local package icon `editors/code/blyx.png` for clean `vsce package` resolution.
+- `editors/code/blyx.png`: Copied official Blyx logo asset into extension folder root.
+
+### 2. Architectural Rationale
+- **Why**: Prepare automated release workflows and VS Code marketplace packaging for the public Alpha release.
+- **Impact**: Enables automated cross-platform binary package publication for `x86_64-pc-windows-msvc`, `x86_64-unknown-linux-gnu`, and `aarch64-apple-darwin`.
+
+
 
 
 

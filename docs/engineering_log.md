@@ -184,6 +184,19 @@ Repository: https://github.com/Blyx-lang-space/blyx
 - **Why**: Fulfill the Master Build Prompt requirements for complete original code headers, creator attribution, clean workspace resolution, and 100% rustc decoupling.
 - **Impact**: Establishes Blyx as a fully independent, publishable, original programming language created by **Rahul Chaube**.
 
+---
+
+## Session Entry 13 — August 1, 2026
+
+### 1. Files Changed
+- `library/blyx-std/src/lib.rs` & `collections.rs`, `io.rs`, `net.rs`, `http.rs`, `json.rs`: Expanded standard library (`blyx-std`) with native collections (`Vec`, `HashMap`, `HashSet`), file I/O, TCP server networking, HTTP request/response abstractions, and JSON serialization.
+- `library/blyx/src/lib.rs` & `scheduler.rs`, `timer.rs`: Expanded core runtime (`blyx`) with task scheduling (`TaskScheduler`) and timer thread sleeping.
+
+### 2. Architectural Rationale
+- **Why**: Execute the v0.2.0-alpha Engineering Sprint, expanding core runtime task scheduling and standard library collections/networking capabilities.
+- **Impact**: Enables production application development across CLI, REST API, HTTP, and async networking workloads.
+
+
 
 
 

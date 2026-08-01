@@ -1,0 +1,8 @@
+[package]
+name = "blyx_parser"
+version = "0.1.0"
+edition = "2024"
+description = "Native Independent Parser for the Blyx Programming Language"
+
+[dependencies]
+blyx_lexer = { path = "../blyx_lexer" }

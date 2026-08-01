@@ -143,6 +143,20 @@ Repository: https://github.com/Blyx-lang-space/blyx
 - **Why**: Ensure zero-configuration static site deployment for `https://blyx-lang.space`.
 - **Impact**: Production deployment readiness across all web subdomains (`https://blyx-lang.space`, `play.blyx-lang.space`, `docs.blyx-lang.space`).
 
+---
+
+## Session Entry 10 — August 1, 2026
+
+### 1. Files Changed
+- `compiler/blyx_lexer/Cargo.toml` & `compiler/blyx_lexer/src/lib.rs`: Created native independent Blyx lexer crate (`blyx_lexer`) supporting `actor`, `gpu`, `parallel`, `tensor`, and keyword tokens.
+- `compiler/blyx_parser/Cargo.toml` & `compiler/blyx_parser/src/lib.rs`: Created native independent Blyx parser crate (`blyx_parser`) emitting native `BlyxAstItem` nodes.
+- `Cargo.toml`: Registered `compiler/blyx_lexer` and `compiler/blyx_parser` in workspace `members = [ ... ]` array.
+
+### 2. Architectural Rationale
+- **Why**: Execute Phase 1 of the Blyx Independence Program, establishing native decoupled lexer and parser frontend crates.
+- **Impact**: Progressively replaces legacy frontend dependencies while preserving 100% working compiler status.
+
+
 
 
 

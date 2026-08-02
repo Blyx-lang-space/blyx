@@ -1,34 +1,101 @@
-import React from 'react';
+import React from "react";
+import Container from "@/components/ui/Container";
+import Breadcrumb from "@/components/Breadcrumb";
+import Card from "@/components/ui/Card";
+import { Cpu, Layers, Terminal, ArrowRight, ShieldCheck, Zap } from "lucide-react";
 
 export const metadata = {
-  title: 'Blyx Compiler Architecture — blyx-lang.space',
-  description: 'Deep dive into the Blyx Intermediate Representation (BIR) SSA instruction set, CFG, BirPassManager, and LlvmIrEmitter.',
+  title: "Compiler Architecture — Blyx",
+  description: "Detailed specification of the Blyx 7-stage compiler architecture, BIR SSA intermediate representation, and LLVM backend code generation.",
 };
 
-export default function CompilerArchitecturePage() {
+const STAGES = [
+  {
+    step: "01",
+    name: "Lexical Analysis",
+    desc: "Converts raw Blyx source code into a streaming token stream with zero string allocations.",
+  },
+  {
+    step: "02",
+    name: "Recursive Descent Parsing",
+    desc: "Parses tokens into an Abstract Syntax Tree (AST) validating statement structure.",
+  },
+  {
+    step: "03",
+    name: "Semantic Analysis",
+    desc: "Performs scope resolution, symbol binding, and lifetime allocation validation.",
+  },
+  {
+    step: "04",
+    name: "Type Checking & Shape Inference",
+    desc: "Verifies static types and multidimensional tensor shapes at compile time.",
+  },
+  {
+    step: "05",
+    name: "BIR SSA Lowering",
+    desc: "Transforms AST into Blyx Intermediate Representation (BIR) in Static Single Assignment form.",
+  },
+  {
+    step: "06",
+    name: "BIR SSA Optimization",
+    desc: "Applies dead code elimination, constant folding, vectorization, and loop unrolling.",
+  },
+  {
+    step: "07",
+    name: "LLVM IR Generation",
+    desc: "Emits clean LLVM IR and invokes LLVM backend to produce native standalone executables.",
+  },
+];
+
+export default function CompilerPage() {
   return (
-    <div style={{ background: '#07090e', color: '#f8fafc', minHeight: '100vh', padding: '4rem 2rem', fontFamily: 'sans-serif' }}>
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: 'bold', background: 'linear-gradient(135deg, #00f2fe, #7f00ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '1rem', textAlign: 'center' }}>
-          Compiler Pipeline & BIR Architecture
+    <Container size="lg" className="py-12 space-y-12">
+      <Breadcrumb items={[{ label: "Compiler Architecture" }]} />
+
+      {/* Header */}
+      <div className="space-y-4 max-w-3xl">
+        <h1 className="font-['IBM_Plex_Sans'] font-bold text-4xl sm:text-5xl text-[var(--text-primary)]">
+          Compiler Architecture & BIR SSA
         </h1>
-        <p style={{ color: '#94a3b8', fontSize: '1.2rem', marginBottom: '3rem', textAlign: 'center' }}>
-          Overview of the 7-stage Blyx compilation pipeline operating through <code>compiler/blyx_bir</code>.
+        <p className="text-lg text-[var(--text-secondary)] leading-relaxed">
+          The Blyx compiler is designed as a deterministic 7-stage pipeline centered around BIR (Blyx Intermediate Representation), a strongly-typed SSA intermediate format.
+        </p>
+      </div>
+
+      {/* Pipeline Diagram */}
+      <div className="grid md:grid-cols-7 gap-3">
+        {STAGES.map((s) => (
+          <Card key={s.step} className="p-4 space-y-2 flex flex-col justify-between">
+            <div>
+              <span className="font-mono text-xs text-[var(--accent)] font-bold">{s.step}</span>
+              <h3 className="font-['IBM_Plex_Sans'] font-semibold text-sm text-[var(--text-primary)] mt-1">
+                {s.name}
+              </h3>
+            </div>
+            <p className="text-[11px] text-[var(--text-secondary)] leading-normal">{s.desc}</p>
+          </Card>
+        ))}
+      </div>
+
+      {/* BIR SSA Sample Code Block */}
+      <div className="space-y-4">
+        <h2 className="font-['IBM_Plex_Sans'] font-bold text-2xl text-[var(--text-primary)]">
+          BIR SSA Instruction Format
+        </h2>
+        <p className="text-sm text-[var(--text-secondary)]">
+          BIR uses linear register assignment with explicit tensor shapes and allocation scopes:
         </p>
 
-        <div style={{ background: '#0f141d', border: '1px solid rgba(0, 242, 254, 0.2)', borderRadius: '12px', padding: '2rem', marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', color: '#00f2fe', marginBottom: '1rem' }}>Compilation Pipeline Stages</h2>
-          <ol style={{ paddingLeft: '1.5rem', color: '#cbd5e1', lineHeight: '2' }}>
-            <li><strong>Lexer & Tokenizer</strong>: Emits strongly typed tokens with line/column Spans.</li>
-            <li><strong>Parser</strong>: Builds Abstract Syntax Tree (AST) with error recovery hooks.</li>
-            <li><strong>HIR Lowerer</strong>: Resolves symbols, module imports, and static generic parameters.</li>
-            <li><strong>Type Checker</strong>: Enforces ownership rules and verifies static tensor dimensions <code>tensor&lt;T, D1, D2&gt;</code>.</li>
-            <li><strong>BIR SSA Lowerer</strong>: Converts HIR into SSA basic blocks and typed instructions in <code>compiler/blyx_bir</code>.</li>
-            <li><strong>Optimizer (`BirPassManager`)</strong>: Applies DCE, constant folding, and copy propagation passes across <code>-O0</code> to <code>-O3</code> levels.</li>
-            <li><strong>LLVM IR Emitter (`LlvmIrEmitter`)</strong>: Generates typed LLVM IR and links native binary executables.</li>
-          </ol>
+        <div className="bg-[var(--code-bg)] border border-[var(--border-strong)] rounded-xl p-4 font-mono text-xs text-[var(--code-text)] overflow-x-auto">
+          <pre>{`// Blyx Intermediate Representation (BIR) SSA Stream
+%0 = alloc tensor<f32, [128, 64]>
+%1 = alloc tensor<f32, [64, 32]>
+%2 = matmul %0, %1 : (tensor<f32, [128, 64]>, tensor<f32, [64, 32]>) -> tensor<f32, [128, 32]>
+%3 = spawn_actor WorkerActor
+send %3, %2
+ret %2`}</pre>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

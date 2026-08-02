@@ -1,31 +1,54 @@
-import React from 'react';
+import React from "react";
+import Container from "@/components/ui/Container";
+import Breadcrumb from "@/components/Breadcrumb";
+import Card from "@/components/ui/Card";
+import { UserCheck, ShieldCheck, Cpu, Terminal } from "lucide-react";
 
 export const metadata = {
-  title: 'About The Blyx Project — blyx-lang.space',
-  description: 'Learn about the mission, architecture, and team behind the Blyx Programming Language.',
+  title: "About & Creator — Blyx Language",
+  description: "Learn about the history, goals, compiler design philosophy, and creator of the Blyx programming language.",
 };
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#07090e] text-[#f8fafc] py-16 px-6 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold bg-gradient-to-r from-[#00f2fe] to-[#7f00ff] bg-clip-text text-transparent mb-6 text-center">
-        About The Blyx Project
-      </h1>
-      <p className="text-[#94a3b8] text-lg mb-8 text-center">
-        Empowering AI-native workloads, systems performance, and parallel computing without memory overhead.
-      </p>
+    <Container size="lg" className="py-12 space-y-12">
+      <Breadcrumb items={[{ label: "About Blyx" }]} />
 
-      <div className="p-8 rounded-2xl bg-[#0f141d] border border-[#00f2fe]/20 space-y-6 text-[#cbd5e1] text-sm leading-relaxed">
-        <h2 className="text-xl font-bold text-[#00f2fe]">Mission</h2>
-        <p>
-          Blyx was created to bridge the gap between high-performance systems programming and modern machine learning workloads. By providing first-class static tensor types, lock-free actor concurrency, and inline GPU execution blocks, Blyx delivers unprecedented developer productivity with zero garbage collection pauses.
-        </p>
-
-        <h2 className="text-xl font-bold text-[#00f2fe]">Compiler Design</h2>
-        <p>
-          Operating through the Blyx Intermediate Representation (<code>compiler/blyx_bir</code>), Blyx compiles down to optimized native assembly via typed LLVM IR emission.
+      <div className="space-y-4 max-w-3xl">
+        <h1 className="font-['IBM_Plex_Sans'] font-bold text-4xl text-[var(--text-primary)]">
+          About Blyx & Design Philosophy
+        </h1>
+        <p className="text-lg text-[var(--text-secondary)] leading-relaxed">
+          Blyx was created to bridge the gap between high-level AI framework expressiveness and low-level bare-metal systems performance.
         </p>
       </div>
-    </div>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        <Card className="space-y-4">
+          <h2 className="font-['IBM_Plex_Sans'] font-bold text-2xl text-[var(--text-primary)]">
+            Core Philosophy
+          </h2>
+          <ul className="space-y-3 text-sm text-[var(--text-secondary)] leading-relaxed">
+            <li><strong>Zero-Cost Abstractions:</strong> High-level tensor operations and actor messaging compile into optimal LLVM machine code without runtime overhead.</li>
+            <li><strong>Compile-Time Verification:</strong> Memory safety, array bounds, and tensor dimensions are verified before execution.</li>
+            <li><strong>Unified Compiler Toolchain:</strong> Single tool for compiling, packaging, testing, and formatting code.</li>
+          </ul>
+        </Card>
+
+        <Card className="space-y-4">
+          <h2 className="font-['IBM_Plex_Sans'] font-bold text-2xl text-[var(--text-primary)]">
+            Creator & Maintainer
+          </h2>
+          <div className="space-y-2">
+            <h3 className="font-['IBM_Plex_Sans'] font-semibold text-lg text-[var(--text-primary)]">
+              Rahul Chaube
+            </h3>
+            <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+              Principal compiler engineer and creator of Blyx. Designed the 7-stage deterministic compiler pipeline and BIR SSA IR.
+            </p>
+          </div>
+        </Card>
+      </div>
+    </Container>
   );
 }

@@ -1,46 +1,197 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
-export function Footer() {
+export default function Footer() {
   return (
-    <footer className="border-t border-[#00f2fe]/15 bg-[#07090e] py-12 px-6 text-sm text-[#94a3b8]">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer
+      style={{
+        background: "#24292e",
+        color: "#e8edf5",
+        padding: "48px max(24px, calc((100% - 1100px) / 2))",
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: "40px",
+          marginBottom: "48px",
+        }}
+      >
+        {/* Brand column */}
         <div>
-          <div className="flex items-center gap-2 font-bold text-lg text-[#00f2fe] mb-3">
-            <img src="/blyx.png" alt="Blyx" className="w-6 h-6 rounded" />
-            <span>Blyx</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+            <Image src="/blyx.png" alt="Blyx Logo" width={28} height={28} />
+            <span
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 700,
+                fontSize: "18px",
+                color: "#fff",
+              }}
+            >
+              Blyx
+            </span>
           </div>
-          <p className="text-xs text-[#64748b]">AI-native systems programming language for high-performance, memory-safe parallel computing.</p>
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "13px",
+              color: "#888",
+              lineHeight: 1.6,
+            }}
+          >
+            AI-native systems language.
+            <br />
+            Created by{" "}
+            <a
+              href="https://github.com/Rahulchaube1"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#79b8ff", textDecoration: "none" }}
+            >
+              Rahul Chaube
+            </a>
+            .
+          </p>
         </div>
+
+        {/* Get help */}
         <div>
-          <h4 className="font-semibold text-[#f8fafc] mb-3">Language</h4>
-          <ul className="space-y-2 text-xs">
-            <li><Link href="/docs">Documentation</Link></li>
-            <li><Link href="/play">Playground</Link></li>
-            <li><Link href="/compiler">Compiler Architecture</Link></li>
-            <li><Link href="/benchmarks">Benchmarks</Link></li>
-          </ul>
+          <h4
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 600,
+              fontSize: "14px",
+              color: "#fff",
+              marginBottom: "16px",
+              textTransform: "uppercase",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Get Help
+          </h4>
+          {[
+            ["Documentation", "/docs"],
+            ["Playground", "/play"],
+            ["GitHub Discussions", "https://github.com/Rahulchaube1/blyxxxx/discussions"],
+          ].map(([label, href]) => (
+            <Link
+              key={href}
+              href={href}
+              style={{
+                display: "block",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "14px",
+                color: "#888",
+                textDecoration: "none",
+                marginBottom: "8px",
+              }}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
+
+        {/* Policies */}
         <div>
-          <h4 className="font-semibold text-[#f8fafc] mb-3">Ecosystem</h4>
-          <ul className="space-y-2 text-xs">
-            <li><Link href="/download">Download Center</Link></li>
-            <li><Link href="/packages">Package Registry</Link></li>
-            <li><Link href="/vscode">VS Code Extension</Link></li>
-            <li><Link href="/roadmap">Roadmap</Link></li>
-          </ul>
+          <h4
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 600,
+              fontSize: "14px",
+              color: "#fff",
+              marginBottom: "16px",
+              textTransform: "uppercase",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Policies
+          </h4>
+          {[
+            ["Code of Conduct", "/community"],
+            ["License (MIT + Apache 2.0)", "/community"],
+            ["Security Policy", "/security"],
+          ].map(([label, href]) => (
+            <Link
+              key={href}
+              href={href}
+              style={{
+                display: "block",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "14px",
+                color: "#888",
+                textDecoration: "none",
+                marginBottom: "8px",
+              }}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
+
+        {/* Social */}
         <div>
-          <h4 className="font-semibold text-[#f8fafc] mb-3">Community</h4>
-          <ul className="space-y-2 text-xs">
-            <li><a href="https://github.com/Blyx-lang-space/blyx" target="_blank" rel="noreferrer">GitHub</a></li>
-            <li><Link href="/community">Governance & Maintainers</Link></li>
-            <li><Link href="/blog">Engineering Blog</Link></li>
-          </ul>
+          <h4
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 600,
+              fontSize: "14px",
+              color: "#fff",
+              marginBottom: "16px",
+              textTransform: "uppercase",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Social
+          </h4>
+          {[
+            ["GitHub", "https://github.com/Rahulchaube1/blyxxxx"],
+            ["X / Twitter", "https://x.com/RahulChaube_"],
+            ["LinkedIn", "https://linkedin.com/in/rahulchaube1"],
+          ].map(([label, href]) => (
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "block",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "14px",
+                color: "#888",
+                textDecoration: "none",
+                marginBottom: "8px",
+              }}
+            >
+              {label}
+            </a>
+          ))}
         </div>
       </div>
-      <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-white/5 text-center text-xs text-[#64748b]">
-        © 2026 The Blyx Project (<a href="https://blyx-lang.space" className="text-[#00f2fe]">blyx-lang.space</a>). Distributed under MIT / Apache-2.0 licenses.
+
+      <div
+        style={{
+          borderTop: "1px solid #444",
+          paddingTop: "24px",
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "12px",
+        }}
+      >
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#666" }}>
+          Dual MIT + Apache 2.0 License • Copyright © {new Date().getFullYear()} Rahul Chaube
+        </span>
+        <a
+          href="https://github.com/Rahulchaube1/blyxxxx"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#666", textDecoration: "none" }}
+        >
+          github.com/Rahulchaube1/blyxxxx
+        </a>
       </div>
     </footer>
   );

@@ -1,53 +1,96 @@
-import React from 'react';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
+import React from "react";
+import Container from "@/components/ui/Container";
+import Breadcrumb from "@/components/Breadcrumb";
+import Card from "@/components/ui/Card";
+import { CheckCircle2, Clock, Sparkles } from "lucide-react";
 
 export const metadata = {
-  title: 'Blyx Language & Ecosystem Roadmap',
-  description: 'Public release milestones leading to Blyx v1.0 Stable.',
+  title: "Development Roadmap — Blyx Language",
+  description: "Official development timeline for Blyx from Alpha to Beta v1.0 and Stable release candidate.",
 };
 
-export default function RoadmapPage() {
-  const milestones = [
-    {
-      title: 'Blyx Beta v1.0 Release Candidate 1',
-      status: 'Current Milestone',
-      badge: 'cyan',
-      details: 'BIR Intermediate Representation crate, LLVM IR emitter, ecosystem tools (blyxpkg, blyxfmt, blyx-analyzer), documentation book.',
-    },
-    {
-      title: 'Blyx v1.0 Stable Release Target (Q2 2027)',
-      status: 'In Progress',
-      badge: 'purple',
-      details: 'Self-hosted parser frontend, remote package registry API, and ABI stabilization.',
-    },
-    {
-      title: 'Blyx v1.1 & Future Horizons',
-      status: 'Planned',
-      badge: 'gray',
-      details: 'Advanced SIMD auto-vectorizer passes, dynamic tensor shapes, and multi-node distributed actor clustering.',
-    },
-  ];
+const MILESTONES = [
+  {
+    phase: "v0.1.0-alpha",
+    status: "Completed",
+    title: "Language Foundation & BIR SSA",
+    items: [
+      "Recursive descent parser & AST lowering",
+      "BIR SSA intermediate representation format",
+      "Basic type inference engine & ownership tracking",
+      "LLVM IR generation & static executable emitting",
+    ],
+  },
+  {
+    phase: "v0.1.0-beta",
+    status: "Active (Final Sprint)",
+    title: "Native Tensors & GPU Compilation",
+    items: [
+      "Multidimensional tensor type inference & shape checks",
+      "Lock-free actor model concurrency runtime",
+      "Direct NVPTX & SPIR-V GPU kernel lowering",
+      "Official VS Code Marketplace extension (v1.1.0)",
+    ],
+  },
+  {
+    phase: "v1.0.0-stable",
+    status: "Upcoming",
+    title: "Production Release & Ecosystem",
+    items: [
+      "Standard library stabilization (std::tensor, std::actor)",
+      "Package registry launch (blyx pkg)",
+      "Formally verified memory safety model",
+      "Commercial production support guarantees",
+    ],
+  },
+];
 
+export default function RoadmapPage() {
   return (
-    <div className="min-h-screen bg-[#07090e] text-[#f8fafc] py-16 px-6 max-w-4xl mx-auto">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#00f2fe] to-[#7f00ff] bg-clip-text text-transparent mb-4">
-          Blyx Public Roadmap
+    <Container size="lg" className="py-12 space-y-10">
+      <Breadcrumb items={[{ label: "Development Roadmap" }]} />
+
+      <div className="space-y-4 max-w-3xl">
+        <h1 className="font-['IBM_Plex_Sans'] font-bold text-4xl text-[var(--text-primary)]">
+          Blyx Development Roadmap
         </h1>
-        <p className="text-[#94a3b8] text-lg">Development milestones and timeline.</p>
+        <p className="text-lg text-[var(--text-secondary)]">
+          Public release milestones tracking language stabilization and compiler architecture.
+        </p>
       </div>
 
       <div className="space-y-6">
-        {milestones.map((m, idx) => (
-          <Card key={idx} title={m.title} subtitle={m.status}>
-            <div className="mb-3">
-              <Badge variant={m.badge as 'cyan' | 'purple' | 'gray'}>{m.status}</Badge>
+        {MILESTONES.map((m, idx) => (
+          <Card key={idx} className="space-y-4">
+            <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
+              <div className="flex items-center space-x-3">
+                <span className="font-mono font-bold text-lg text-[var(--accent)]">{m.phase}</span>
+                <h3 className="font-['IBM_Plex_Sans'] font-semibold text-lg text-[var(--text-primary)]">
+                  {m.title}
+                </h3>
+              </div>
+              <span className={`text-xs font-mono px-2.5 py-1 rounded-full font-semibold border ${
+                m.status.includes("Completed")
+                  ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                  : m.status.includes("Active")
+                  ? "bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/20"
+                  : "bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-color)]"
+              }`}>
+                {m.status}
+              </span>
             </div>
-            <p className="text-sm text-[#cbd5e1]">{m.details}</p>
+
+            <ul className="grid md:grid-cols-2 gap-3 text-sm text-[var(--text-secondary)]">
+              {m.items.map((item, iIdx) => (
+                <li key={iIdx} className="flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </Card>
         ))}
       </div>
-    </div>
+    </Container>
   );
 }

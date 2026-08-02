@@ -1,21 +1,37 @@
-import React from 'react';
-import { Navbar } from '../components/Navbar';
-import { Footer } from '../components/Footer';
+import type { Metadata } from 'next';
 import './globals.css';
 
-export const metadata = {
-  title: 'The Blyx Programming Language — blyx-lang.space',
-  description: 'Official web portal for the Blyx Programming Language. AI-native, high-performance systems language with static tensors, actors, and inline GPU acceleration.',
+export const metadata: Metadata = {
+  title: 'Blyx — A language built for the AI era.',
+  description: 'Memory-safe, GPU-native, actor-concurrent. Zero garbage collector. Created by Rahul Chaube.',
+  authors: [{ name: 'Rahul Chaube', url: 'https://github.com/Rahulchaube1' }],
+  metadataBase: new URL('https://blyx-lang.space'),
+  openGraph: {
+    title: 'Blyx Programming Language',
+    description: 'Memory-safe, GPU-native, actor-concurrent systems language for the AI era.',
+    url: 'https://blyx-lang.space',
+    siteName: 'Blyx',
+    images: [{ url: '/blyx.png' }],
+  },
+  twitter: {
+    card: 'summary',
+    creator: '@RahulChaube_',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-[#07090e] text-[#f8fafc] font-sans antialiased min-h-screen flex flex-col justify-between">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap"
+          rel="stylesheet"
+        />
+        <link rel="icon" href="/blyx.png" />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }

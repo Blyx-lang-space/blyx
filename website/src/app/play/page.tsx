@@ -182,7 +182,7 @@ export default function PlaygroundPage() {
               language="rust"
               theme="vs-dark"
               value={code}
-              onChange={(v) => setCode(v || '')}
+              onChange={(v: string | undefined) => setCode(v || '')}
               options={{
                 fontSize: 14,
                 minimap: { enabled: false },

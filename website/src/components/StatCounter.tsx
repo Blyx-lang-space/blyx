@@ -105,7 +105,21 @@ function StatItem({ stat, active }: { stat: Stat; active: boolean }) {
   );
 }
 
-export default function StatCounter() {
+interface StatCounterProps {
+  value?: string;
+  label?: string;
+  sublabel?: string;
+}
+
+function parseStatValue(valStr: string): { num: number; suffix: string; decimals: number } {
+  const match = valStr.match(/^([0-9.]+)\s*(.*)$/);
+  if (!match) return { num: 0, suffix: valStr, decimals: 0 };
+  const num = parseFloat(match[1]);
+  const decimals = match[1].includes(".") ? match[1].split(".")[1].length : 0;
+  return { num, suffix: match[2], decimals };
+}
+
+function SingleStatCounter({ value, label, sublabel }: { value: string; label: string; sublabel: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
 
@@ -117,6 +131,41 @@ export default function StatCounter() {
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
+
+  const { num, suffix, decimals } = parseStatValue(value);
+  const count = useCountUp(num, decimals, active);
+
+  return (
+    <div ref={ref} className="text-center p-6 bg-[#0d1420] border border-[#1a2535] rounded-xl">
+      <div className="font-['Space_Grotesk'] font-bold text-4xl sm:text-5xl text-[#00e5ff] tracking-tight">
+        {count}{suffix}
+      </div>
+      <div className="font-['Inter'] font-medium text-sm sm:text-base text-[#e8edf5] mt-2">
+        {label}
+      </div>
+      <div className="font-['Inter'] text-xs text-[#6b7a96] mt-1 max-w-[200px] mx-auto">
+        {sublabel}
+      </div>
+    </div>
+  );
+}
+
+export default function StatCounter({ value, label, sublabel }: StatCounterProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setActive(true); },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  if (value && label && sublabel) {
+    return <SingleStatCounter value={value} label={label} sublabel={sublabel} />;
+  }
 
   return (
     <div ref={ref}>
@@ -149,3 +198,4 @@ export default function StatCounter() {
     </div>
   );
 }
+

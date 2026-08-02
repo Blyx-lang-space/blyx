@@ -1,101 +1,95 @@
 import React from "react";
-import Container from "@/components/ui/Container";
-import Breadcrumb from "@/components/Breadcrumb";
-import Card from "@/components/ui/Card";
-import { Cpu, Layers, Terminal, ArrowRight, ShieldCheck, Zap } from "lucide-react";
-
-export const metadata = {
-  title: "Compiler Architecture — Blyx",
-  description: "Detailed specification of the Blyx 7-stage compiler architecture, BIR SSA intermediate representation, and LLVM backend code generation.",
-};
-
-const STAGES = [
-  {
-    step: "01",
-    name: "Lexical Analysis",
-    desc: "Converts raw Blyx source code into a streaming token stream with zero string allocations.",
-  },
-  {
-    step: "02",
-    name: "Recursive Descent Parsing",
-    desc: "Parses tokens into an Abstract Syntax Tree (AST) validating statement structure.",
-  },
-  {
-    step: "03",
-    name: "Semantic Analysis",
-    desc: "Performs scope resolution, symbol binding, and lifetime allocation validation.",
-  },
-  {
-    step: "04",
-    name: "Type Checking & Shape Inference",
-    desc: "Verifies static types and multidimensional tensor shapes at compile time.",
-  },
-  {
-    step: "05",
-    name: "BIR SSA Lowering",
-    desc: "Transforms AST into Blyx Intermediate Representation (BIR) in Static Single Assignment form.",
-  },
-  {
-    step: "06",
-    name: "BIR SSA Optimization",
-    desc: "Applies dead code elimination, constant folding, vectorization, and loop unrolling.",
-  },
-  {
-    step: "07",
-    name: "LLVM IR Generation",
-    desc: "Emits clean LLVM IR and invokes LLVM backend to produce native standalone executables.",
-  },
-];
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function CompilerPage() {
   return (
-    <Container size="lg" className="py-12 space-y-12">
-      <Breadcrumb items={[{ label: "Compiler Architecture" }]} />
+    <div style={{ background: "#ffffff", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <Navbar />
 
-      {/* Header */}
-      <div className="space-y-4 max-w-3xl">
-        <h1 className="font-['IBM_Plex_Sans'] font-bold text-4xl sm:text-5xl text-[var(--text-primary)]">
-          Compiler Architecture & BIR SSA
-        </h1>
-        <p className="text-lg text-[var(--text-secondary)] leading-relaxed">
-          The Blyx compiler is designed as a deterministic 7-stage pipeline centered around BIR (Blyx Intermediate Representation), a strongly-typed SSA intermediate format.
-        </p>
-      </div>
+      <main style={{ flex: 1, padding: "60px max(24px, calc((100% - 1100px) / 2))" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#586069", marginBottom: "24px" }}>
+            <Link href="/" style={{ color: "#0066cc", textDecoration: "none" }}>Home</Link> / Compiler Architecture
+          </div>
 
-      {/* Pipeline Diagram */}
-      <div className="grid md:grid-cols-7 gap-3">
-        {STAGES.map((s) => (
-          <Card key={s.step} className="p-4 space-y-2 flex flex-col justify-between">
-            <div>
-              <span className="font-mono text-xs text-[var(--accent)] font-bold">{s.step}</span>
-              <h3 className="font-['IBM_Plex_Sans'] font-semibold text-sm text-[var(--text-primary)] mt-1">
-                {s.name}
-              </h3>
+          <h1 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "40px", color: "#1a1a2e", marginBottom: "16px", letterSpacing: "-0.5px" }}>
+            Compiler Architecture & BIR SSA
+          </h1>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: "#586069", lineHeight: 1.6, marginBottom: "48px" }}>
+            The Blyx compiler uses a 7-stage pipeline centered around BIR (Blyx Intermediate Representation), a strongly-typed SSA IR that lowers directly to LLVM and GPU PTX.
+          </p>
+
+          {/* 7 Pipeline Stages */}
+          <div style={{ marginBottom: "48px" }}>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "24px", color: "#1a1a2e", marginBottom: "24px" }}>
+              7-Stage Deterministic Pipeline
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px" }}>
+              {[
+                { stage: "01", title: "Lexer", desc: "Zero-copy streaming tokenization." },
+                { stage: "02", title: "Parser", desc: "Recursive descent AST generation." },
+                { stage: "03", title: "Semantic", desc: "Scope binding & linear ownership analysis." },
+                { stage: "04", title: "Type Check", desc: "Compile-time static tensor dimension inference." },
+                { stage: "05", title: "BIR Lowering", desc: "SSA register allocation & intermediate IR emission." },
+                { stage: "06", title: "BIR Optimizer", desc: "Kernel fusion, dead code removal & loop unrolling." },
+                { stage: "07", title: "LLVM Backend", desc: "Machine code generation for x86_64, ARM64 & PTX." },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    padding: "20px",
+                    background: "#f8f9fa",
+                    borderRadius: "8px",
+                    border: "1px solid #e1e4e8",
+                  }}
+                >
+                  <span style={{ fontFamily: "'Source Code Pro', monospace", fontSize: "13px", color: "#0066cc", fontWeight: 700 }}>
+                    {item.stage}
+                  </span>
+                  <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: "16px", color: "#1a1a2e", margin: "4px 0 8px" }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#586069", margin: 0, lineHeight: 1.5 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
             </div>
-            <p className="text-[11px] text-[var(--text-secondary)] leading-normal">{s.desc}</p>
-          </Card>
-        ))}
-      </div>
+          </div>
 
-      {/* BIR SSA Sample Code Block */}
-      <div className="space-y-4">
-        <h2 className="font-['IBM_Plex_Sans'] font-bold text-2xl text-[var(--text-primary)]">
-          BIR SSA Instruction Format
-        </h2>
-        <p className="text-sm text-[var(--text-secondary)]">
-          BIR uses linear register assignment with explicit tensor shapes and allocation scopes:
-        </p>
-
-        <div className="bg-[var(--code-bg)] border border-[var(--border-strong)] rounded-xl p-4 font-mono text-xs text-[var(--code-text)] overflow-x-auto">
-          <pre>{`// Blyx Intermediate Representation (BIR) SSA Stream
-%0 = alloc tensor<f32, [128, 64]>
-%1 = alloc tensor<f32, [64, 32]>
-%2 = matmul %0, %1 : (tensor<f32, [128, 64]>, tensor<f32, [64, 32]>) -> tensor<f32, [128, 32]>
-%3 = spawn_actor WorkerActor
-send %3, %2
-ret %2`}</pre>
+          {/* BIR SSA IR Code Box */}
+          <div>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "24px", color: "#1a1a2e", marginBottom: "16px" }}>
+              BIR SSA Format
+            </h2>
+            <div
+              style={{
+                background: "#1a1a2e",
+                borderRadius: "8px",
+                overflow: "hidden",
+                border: "1px solid #333355",
+              }}
+            >
+              <div style={{ background: "#252540", padding: "10px 16px", borderBottom: "1px solid #333355", color: "#888", fontSize: "13px", fontFamily: "monospace" }}>
+                bir_dump.ir
+              </div>
+              <pre style={{ margin: 0, padding: "20px 24px", fontFamily: "'Source Code Pro', monospace", fontSize: "14px", lineHeight: 1.7, color: "#e8edf5" }}>
+                <code>
+                  <span style={{ color: "#888" }}>{"// BIR SSA Stream Output\n"}</span>
+                  <span style={{ color: "#7c3aed" }}>%0 </span>= <span style={{ color: "#79b8ff" }}>alloc</span> tensor&lt;<span style={{ color: "#005cc5" }}>f32</span>, <span style={{ color: "#e36209" }}>128</span>, <span style={{ color: "#e36209" }}>64</span>&gt;{"\n"}
+                  <span style={{ color: "#7c3aed" }}>%1 </span>= <span style={{ color: "#79b8ff" }}>alloc</span> tensor&lt;<span style={{ color: "#005cc5" }}>f32</span>, <span style={{ color: "#e36209" }}>64</span>, <span style={{ color: "#e36209" }}>32</span>&gt;{"\n"}
+                  <span style={{ color: "#7c3aed" }}>%2 </span>= <span style={{ color: "#79b8ff" }}>matmul</span> %0, %1 : (tensor&lt;f32, 128, 64&gt;, tensor&lt;f32, 64, 32&gt;) -&gt; tensor&lt;f32, 128, 32&gt;{"\n"}
+                  <span style={{ color: "#7c3aed" }}>ret </span>%2
+                </code>
+              </pre>
+            </div>
+          </div>
         </div>
-      </div>
-    </Container>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

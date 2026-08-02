@@ -1,49 +1,38 @@
 import React from "react";
-import Container from "@/components/ui/Container";
-import Breadcrumb from "@/components/Breadcrumb";
-import Card from "@/components/ui/Card";
-import { ShieldCheck, Lock, AlertTriangle } from "lucide-react";
-
-export const metadata = {
-  title: "Security Policy — Blyx Language",
-  description: "Blyx security policy, vulnerability reporting guidelines, and memory safety invariants.",
-};
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function SecurityPage() {
   return (
-    <Container size="lg" className="py-12 space-y-10">
-      <Breadcrumb items={[{ label: "Security Policy" }]} />
+    <div style={{ background: "#ffffff", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <Navbar />
 
-      <div className="space-y-4 max-w-3xl">
-        <h1 className="font-['IBM_Plex_Sans'] font-bold text-4xl text-[var(--text-primary)]">
-          Blyx Security Policy & Safety Invariants
-        </h1>
-        <p className="text-lg text-[var(--text-secondary)]">
-          Guidelines for reporting security vulnerabilities in the Blyx compiler, standard library, and package registry.
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        <Card className="space-y-3">
-          <div className="flex items-center space-x-2 text-emerald-500 font-['IBM_Plex_Sans'] font-bold text-xl">
-            <ShieldCheck className="w-5 h-5" />
-            <span>Memory Safety Guarantees</span>
+      <main style={{ flex: 1, padding: "60px max(24px, calc((100% - 1100px) / 2))" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#586069", marginBottom: "24px" }}>
+            <Link href="/" style={{ color: "#0066cc", textDecoration: "none" }}>Home</Link> / Security Policy
           </div>
-          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-            The Blyx compiler guarantees at compile time that safe Blyx code contains zero buffer overflows, double frees, use-after-free bugs, or data races across concurrent threads.
-          </p>
-        </Card>
 
-        <Card className="space-y-3">
-          <div className="flex items-center space-x-2 text-[var(--accent)] font-['IBM_Plex_Sans'] font-bold text-xl">
-            <AlertTriangle className="w-5 h-5" />
-            <span>Reporting Vulnerabilities</span>
-          </div>
-          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-            If you discover a security vulnerability or compiler soundness bug, please email <strong>rahulchaube1@gmail.com</strong> or submit a private disclosure on GitHub.
+          <h1 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "40px", color: "#1a1a2e", marginBottom: "16px", letterSpacing: "-0.5px" }}>
+            Blyx Security Policy
+          </h1>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: "#586069", lineHeight: 1.6, marginBottom: "48px" }}>
+            Vulnerability disclosure policy and compiler safety invariants.
           </p>
-        </Card>
-      </div>
-    </Container>
+
+          <div style={{ padding: "32px", background: "#f8f9fa", borderRadius: "8px", border: "1px solid #e1e4e8" }}>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "22px", color: "#1a1a2e", marginBottom: "12px" }}>
+              Reporting Security Vulnerabilities
+            </h2>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: "#586069", lineHeight: 1.7, margin: 0 }}>
+              To report security vulnerabilities or compiler soundness bugs, please email <strong>rahulchaube1@gmail.com</strong> or submit a private disclosure on GitHub.
+            </p>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

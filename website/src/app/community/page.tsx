@@ -1,89 +1,76 @@
 import React from "react";
-import Container from "@/components/ui/Container";
-import Breadcrumb from "@/components/Breadcrumb";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import { Github, MessageSquare, FileText, UserCheck, ShieldCheck, Heart } from "lucide-react";
-
-export const metadata = {
-  title: "Community & Governance — Blyx Language",
-  description: "Join the Blyx open-source community, contribute via GitHub RFCs, participate in design governance, and join the Discord.",
-};
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function CommunityPage() {
   return (
-    <Container size="lg" className="py-12 space-y-12">
-      <Breadcrumb items={[{ label: "Community & Governance" }]} />
+    <div style={{ background: "#ffffff", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <Navbar />
 
-      <div className="space-y-4 max-w-3xl">
-        <h1 className="font-['IBM_Plex_Sans'] font-bold text-4xl text-[var(--text-primary)]">
-          Community & Governance
-        </h1>
-        <p className="text-lg text-[var(--text-secondary)] leading-relaxed">
-          Blyx is an open-source project created by Rahul Chaube and developed by a global community of compiler engineers and systems programmers.
-        </p>
-      </div>
-
-      {/* Creator Spotlight */}
-      <Card className="bg-[var(--bg-secondary)] border-[var(--border-strong)] p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <div className="inline-flex items-center space-x-2 text-xs font-mono font-semibold text-[var(--accent)] uppercase">
-            <UserCheck className="w-4 h-4" />
-            <span>Core Author & Lead Architect</span>
+      <main style={{ flex: 1, padding: "60px max(24px, calc((100% - 1100px) / 2))" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#586069", marginBottom: "24px" }}>
+            <Link href="/" style={{ color: "#0066cc", textDecoration: "none" }}>Home</Link> / Community & Governance
           </div>
-          <h2 className="font-['IBM_Plex_Sans'] font-bold text-2xl text-[var(--text-primary)]">
-            Rahul Chaube
-          </h2>
-          <p className="text-sm text-[var(--text-secondary)] max-w-xl">
-            Lead architect of the Blyx programming language, designer of the BIR SSA IR, and author of the Blyx compiler frontend.
+
+          <h1 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "40px", color: "#1a1a2e", marginBottom: "16px", letterSpacing: "-0.5px" }}>
+            Community & Governance
+          </h1>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: "#586069", lineHeight: 1.6, marginBottom: "48px" }}>
+            Blyx is an open-source project created by Rahul Chaube and developed by a global community of compiler engineers.
           </p>
+
+          {/* Author Box */}
+          <div style={{ padding: "32px", background: "#f8f9fa", borderRadius: "8px", border: "1px solid #e1e4e8", marginBottom: "32px" }}>
+            <div style={{ fontFamily: "'Source Code Pro', monospace", fontSize: "13px", color: "#0066cc", fontWeight: 700, textTransform: "uppercase", marginBottom: "8px" }}>
+              Core Author & Lead Architect
+            </div>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "24px", color: "#1a1a2e", marginBottom: "12px" }}>
+              Rahul Chaube
+            </h2>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: "#586069", lineHeight: 1.6, margin: "0 0 16px" }}>
+              Designer of the Blyx language specification, BIR SSA intermediate format, and lead maintainer of the compiler toolchain.
+            </p>
+            <a
+              href="https://github.com/Rahulchaube1"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#0066cc", fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: "14px", textDecoration: "none" }}
+            >
+              GitHub Profile →
+            </a>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "24px" }}>
+            <div style={{ padding: "24px", background: "#ffffff", borderRadius: "8px", border: "1px solid #e1e4e8" }}>
+              <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: "18px", color: "#1a1a2e", marginBottom: "12px" }}>
+                GitHub Repository
+              </h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#586069", lineHeight: 1.6, marginBottom: "16px" }}>
+                Inspect source code, submit bug reports, and create pull requests.
+              </p>
+              <a href="https://github.com/Rahulchaube1/blyxxxx" target="_blank" rel="noopener noreferrer" style={{ color: "#0066cc", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
+                Visit Repository →
+              </a>
+            </div>
+
+            <div style={{ padding: "24px", background: "#ffffff", borderRadius: "8px", border: "1px solid #e1e4e8" }}>
+              <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: "18px", color: "#1a1a2e", marginBottom: "12px" }}>
+                GitHub RFCs
+              </h3>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#586069", lineHeight: 1.6, marginBottom: "16px" }}>
+                Propose language features, syntax changes, and compiler APIs.
+              </p>
+              <a href="https://github.com/Blyx-lang-space/blyx/tree/blyx-main/RFC" target="_blank" rel="noopener noreferrer" style={{ color: "#0066cc", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
+                Browse RFCs →
+              </a>
+            </div>
+          </div>
         </div>
-        <Button href="https://github.com/Rahulchaube1" variant="outline" size="md">
-          <Github className="w-4 h-4 mr-2" /> GitHub Profile
-        </Button>
-      </Card>
+      </main>
 
-      {/* Community Links */}
-      <div className="grid md:grid-cols-3 gap-6">
-        <Card className="space-y-3">
-          <Github className="w-6 h-6 text-[var(--text-primary)]" />
-          <h3 className="font-['IBM_Plex_Sans'] font-bold text-lg text-[var(--text-primary)]">
-            GitHub Repository
-          </h3>
-          <p className="text-sm text-[var(--text-secondary)]">
-            Inspect source code, file issues, and submit pull requests.
-          </p>
-          <Button href="https://github.com/Rahulchaube1/blyxxxx" variant="outline" size="sm" className="w-full">
-            Visit GitHub
-          </Button>
-        </Card>
-
-        <Card className="space-y-3">
-          <FileText className="w-6 h-6 text-[var(--accent)]" />
-          <h3 className="font-['IBM_Plex_Sans'] font-bold text-lg text-[var(--text-primary)]">
-            GitHub RFC Process
-          </h3>
-          <p className="text-sm text-[var(--text-secondary)]">
-            Propose language features, syntax changes, and compiler APIs.
-          </p>
-          <Button href="https://github.com/Blyx-lang-space/blyx/tree/blyx-main/RFC" variant="outline" size="sm" className="w-full">
-            Browse RFCs
-          </Button>
-        </Card>
-
-        <Card className="space-y-3">
-          <MessageSquare className="w-6 h-6 text-indigo-500" />
-          <h3 className="font-['IBM_Plex_Sans'] font-bold text-lg text-[var(--text-primary)]">
-            Community Chat
-          </h3>
-          <p className="text-sm text-[var(--text-secondary)]">
-            Join the developer chat for live help, compiler discussions, and announcements.
-          </p>
-          <Button href="https://discord.gg/blyx" variant="outline" size="sm" className="w-full">
-            Join Community
-          </Button>
-        </Card>
-      </div>
-    </Container>
+      <Footer />
+    </div>
   );
 }

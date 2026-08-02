@@ -1,96 +1,69 @@
 import React from "react";
-import Container from "@/components/ui/Container";
-import Breadcrumb from "@/components/Breadcrumb";
-import Card from "@/components/ui/Card";
-import { CheckCircle2, Clock, Sparkles } from "lucide-react";
-
-export const metadata = {
-  title: "Development Roadmap — Blyx Language",
-  description: "Official development timeline for Blyx from Alpha to Beta v1.0 and Stable release candidate.",
-};
-
-const MILESTONES = [
-  {
-    phase: "v0.1.0-alpha",
-    status: "Completed",
-    title: "Language Foundation & BIR SSA",
-    items: [
-      "Recursive descent parser & AST lowering",
-      "BIR SSA intermediate representation format",
-      "Basic type inference engine & ownership tracking",
-      "LLVM IR generation & static executable emitting",
-    ],
-  },
-  {
-    phase: "v0.1.0-beta",
-    status: "Active (Final Sprint)",
-    title: "Native Tensors & GPU Compilation",
-    items: [
-      "Multidimensional tensor type inference & shape checks",
-      "Lock-free actor model concurrency runtime",
-      "Direct NVPTX & SPIR-V GPU kernel lowering",
-      "Official VS Code Marketplace extension (v1.1.0)",
-    ],
-  },
-  {
-    phase: "v1.0.0-stable",
-    status: "Upcoming",
-    title: "Production Release & Ecosystem",
-    items: [
-      "Standard library stabilization (std::tensor, std::actor)",
-      "Package registry launch (blyx pkg)",
-      "Formally verified memory safety model",
-      "Commercial production support guarantees",
-    ],
-  },
-];
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function RoadmapPage() {
   return (
-    <Container size="lg" className="py-12 space-y-10">
-      <Breadcrumb items={[{ label: "Development Roadmap" }]} />
+    <div style={{ background: "#ffffff", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <Navbar />
 
-      <div className="space-y-4 max-w-3xl">
-        <h1 className="font-['IBM_Plex_Sans'] font-bold text-4xl text-[var(--text-primary)]">
-          Blyx Development Roadmap
-        </h1>
-        <p className="text-lg text-[var(--text-secondary)]">
-          Public release milestones tracking language stabilization and compiler architecture.
-        </p>
-      </div>
+      <main style={{ flex: 1, padding: "60px max(24px, calc((100% - 1100px) / 2))" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#586069", marginBottom: "24px" }}>
+            <Link href="/" style={{ color: "#0066cc", textDecoration: "none" }}>Home</Link> / Roadmap
+          </div>
 
-      <div className="space-y-6">
-        {MILESTONES.map((m, idx) => (
-          <Card key={idx} className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
-              <div className="flex items-center space-x-3">
-                <span className="font-mono font-bold text-lg text-[var(--accent)]">{m.phase}</span>
-                <h3 className="font-['IBM_Plex_Sans'] font-semibold text-lg text-[var(--text-primary)]">
+          <h1 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "40px", color: "#1a1a2e", marginBottom: "16px", letterSpacing: "-0.5px" }}>
+            Development Roadmap
+          </h1>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: "#586069", lineHeight: 1.6, marginBottom: "48px" }}>
+            Milestones tracking compiler stabilization, language specs, and standard library releases.
+          </p>
+
+          <div style={{ display: "grid", gap: "24px" }}>
+            {[
+              {
+                phase: "v0.1.0-alpha",
+                status: "Completed",
+                title: "Language Foundation & BIR SSA",
+                desc: "Recursive descent parser, AST lowering, BIR SSA format, static type checking, and LLVM IR codegen.",
+              },
+              {
+                phase: "v0.1.0-beta",
+                status: "Active",
+                title: "Native Tensors & GPU Compilation",
+                desc: "Static multidimensional tensor inference, lock-free actor model, direct PTX/SPIR-V GPU lowering, and VS Code extension.",
+              },
+              {
+                phase: "v1.0.0-stable",
+                status: "Upcoming",
+                title: "Production Release",
+                desc: "Standard library stabilization (std::tensor, std::actor), package registry launch, and production support.",
+              },
+            ].map((m, idx) => (
+              <div key={idx} style={{ padding: "32px", background: "#f8f9fa", borderRadius: "8px", border: "1px solid #e1e4e8" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                  <span style={{ fontFamily: "'Source Code Pro', monospace", fontWeight: 700, fontSize: "16px", color: "#0066cc" }}>
+                    {m.phase}
+                  </span>
+                  <span style={{ fontFamily: "monospace", fontSize: "12px", background: m.status === "Active" ? "#f0f9ff" : "#e1e4e8", color: m.status === "Active" ? "#0066cc" : "#586069", padding: "2px 8px", borderRadius: "4px", fontWeight: 600 }}>
+                    {m.status}
+                  </span>
+                </div>
+                <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "20px", color: "#1a1a2e", marginBottom: "8px" }}>
                   {m.title}
-                </h3>
+                </h2>
+                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: "#586069", lineHeight: 1.6, margin: 0 }}>
+                  {m.desc}
+                </p>
               </div>
-              <span className={`text-xs font-mono px-2.5 py-1 rounded-full font-semibold border ${
-                m.status.includes("Completed")
-                  ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                  : m.status.includes("Active")
-                  ? "bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/20"
-                  : "bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-color)]"
-              }`}>
-                {m.status}
-              </span>
-            </div>
+            ))}
+          </div>
+        </div>
+      </main>
 
-            <ul className="grid md:grid-cols-2 gap-3 text-sm text-[var(--text-secondary)]">
-              {m.items.map((item, iIdx) => (
-                <li key={iIdx} className="flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        ))}
-      </div>
-    </Container>
+      <Footer />
+    </div>
   );
 }

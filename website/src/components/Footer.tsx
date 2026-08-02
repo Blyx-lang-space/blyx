@@ -6,29 +6,30 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: "#24292e",
-        color: "#e8edf5",
-        padding: "48px max(24px, calc((100% - 1100px) / 2))",
+        background: "#060913",
+        borderTop: "1px solid #1e293b",
+        color: "#94a3b8",
+        padding: "60px max(20px, calc((100% - 1300px) / 2)) 40px",
       }}
     >
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
           gap: "40px",
           marginBottom: "48px",
         }}
       >
         {/* Brand column */}
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
-            <Image src="/blyx.png" alt="Blyx Logo" width={28} height={28} />
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "16px" }}>
+            <Image src="/blyx.png" alt="Blyx Logo" width={44} height={44} />
             <span
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 700,
-                fontSize: "18px",
-                color: "#fff",
+                fontSize: "24px",
+                color: "#ffffff",
               }}
             >
               Blyx
@@ -37,19 +38,19 @@ export default function Footer() {
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: "13px",
-              color: "#888",
+              fontSize: "14px",
+              color: "#94a3b8",
               lineHeight: 1.6,
             }}
           >
-            AI-native systems language.
+            A language empowering everyone to build reliable and efficient AI systems.
             <br />
             Created by{" "}
             <a
               href="https://github.com/Rahulchaube1"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#79b8ff", textDecoration: "none" }}
+              style={{ color: "#60a5fa", textDecoration: "none" }}
             >
               Rahul Chaube
             </a>
@@ -57,25 +58,26 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Get help */}
+        {/* Documentation */}
         <div>
           <h4
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 600,
               fontSize: "14px",
-              color: "#fff",
+              color: "#ffffff",
               marginBottom: "16px",
               textTransform: "uppercase",
               letterSpacing: "0.5px",
             }}
           >
-            Get Help
+            Documentation
           </h4>
           {[
-            ["Documentation", "/docs"],
-            ["Playground", "/play"],
-            ["GitHub Discussions", "https://github.com/Rahulchaube1/blyxxxx/discussions"],
+            ["The Blyx Book", "/learn/book"],
+            ["API Reference", "/docs"],
+            ["Interactive Playground", "/play"],
+            ["Compiler Internals", "/compiler"],
           ].map(([label, href]) => (
             <Link
               key={href}
@@ -84,9 +86,9 @@ export default function Footer() {
                 display: "block",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "14px",
-                color: "#888",
+                color: "#94a3b8",
                 textDecoration: "none",
-                marginBottom: "8px",
+                marginBottom: "10px",
               }}
             >
               {label}
@@ -94,24 +96,25 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Policies */}
+        {/* Community & Code */}
         <div>
           <h4
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 600,
               fontSize: "14px",
-              color: "#fff",
+              color: "#ffffff",
               marginBottom: "16px",
               textTransform: "uppercase",
               letterSpacing: "0.5px",
             }}
           >
-            Policies
+            Community
           </h4>
           {[
-            ["Code of Conduct", "/community"],
-            ["License (MIT + Apache 2.0)", "/community"],
+            ["GitHub Repository", "https://github.com/Rahulchaube1/blyxxxx"],
+            ["Governance & RFCs", "/community"],
+            ["Engineering Blog", "/blog"],
             ["Security Policy", "/security"],
           ].map(([label, href]) => (
             <Link
@@ -121,9 +124,9 @@ export default function Footer() {
                 display: "block",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "14px",
-                color: "#888",
+                color: "#94a3b8",
                 textDecoration: "none",
-                marginBottom: "8px",
+                marginBottom: "10px",
               }}
             >
               {label}
@@ -131,14 +134,14 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Social */}
+        {/* Official Links */}
         <div>
           <h4
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 600,
               fontSize: "14px",
-              color: "#fff",
+              color: "#ffffff",
               marginBottom: "16px",
               textTransform: "uppercase",
               letterSpacing: "0.5px",
@@ -147,9 +150,9 @@ export default function Footer() {
             Social
           </h4>
           {[
-            ["GitHub", "https://github.com/Rahulchaube1/blyxxxx"],
-            ["X / Twitter", "https://x.com/RahulChaube_"],
-            ["LinkedIn", "https://linkedin.com/in/rahulchaube1"],
+            ["GitHub Organization", "https://github.com/Blyx-lang-space"],
+            ["Creator X Profile", "https://x.com/RahulChaube_"],
+            ["LinkedIn Network", "https://linkedin.com/in/rahulchaube1"],
           ].map(([label, href]) => (
             <a
               key={href}
@@ -160,12 +163,12 @@ export default function Footer() {
                 display: "block",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "14px",
-                color: "#888",
+                color: "#94a3b8",
                 textDecoration: "none",
-                marginBottom: "8px",
+                marginBottom: "10px",
               }}
             >
-              {label}
+              {label} ↗
             </a>
           ))}
         </div>
@@ -173,7 +176,7 @@ export default function Footer() {
 
       <div
         style={{
-          borderTop: "1px solid #444",
+          borderTop: "1px solid #1e293b",
           paddingTop: "24px",
           display: "flex",
           justifyContent: "space-between",
@@ -181,17 +184,12 @@ export default function Footer() {
           gap: "12px",
         }}
       >
-        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#666" }}>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#64748b" }}>
           Dual MIT + Apache 2.0 License • Copyright © {new Date().getFullYear()} Rahul Chaube
         </span>
-        <a
-          href="https://github.com/Rahulchaube1/blyxxxx"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#666", textDecoration: "none" }}
-        >
-          github.com/Rahulchaube1/blyxxxx
-        </a>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#64748b" }}>
+          https://blyx-lang.space
+        </span>
       </div>
     </footer>
   );

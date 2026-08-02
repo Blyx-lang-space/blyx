@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Search as SearchIcon, X } from "lucide-react";
 
 interface SearchItem {
   title: string;
@@ -13,10 +12,10 @@ interface SearchItem {
 
 const INDEX: SearchItem[] = [
   { title: "The Blyx Book: Introduction", category: "Book", href: "/learn", desc: "Language overview and principles." },
-  { title: "Ownership & Borrowing Rules", category: "Book", href: "/learn#ownership", desc: "Linear memory safety without GC." },
-  { title: "Static Tensor Types (tensor<T, D1, D2>)", category: "Docs", href: "/docs#tensors", desc: "Compile-time dimension verification." },
-  { title: "Actor Model Concurrency", category: "Book", href: "/learn#actors", desc: "Lock-free messaging runtime." },
-  { title: "Inline GPU Kernel Blocks (gpu {})", category: "Examples", href: "/examples#gpu", desc: "Direct PTX compilation." },
+  { title: "Ownership & Borrowing Rules", category: "Book", href: "/learn/book/ch05-ownership-memory", desc: "Linear memory safety without GC." },
+  { title: "Static Tensor Types (tensor<T, D1, D2>)", category: "Docs", href: "/learn/book/ch12-tensors-ai", desc: "Compile-time dimension verification." },
+  { title: "Actor Model Concurrency", category: "Book", href: "/learn/book/ch11-actors-concurrency", desc: "Lock-free messaging runtime." },
+  { title: "Inline GPU Kernel Blocks (gpu {})", category: "Examples", href: "/learn/book/ch13-gpu-compute", desc: "Direct PTX compilation." },
   { title: "std/tensor Package", category: "Packages", href: "/packages", desc: "Tensor primitives with SIMD." },
   { title: "Installing Blyx via Terminal", category: "Docs", href: "/download", desc: "curl install script and OS binaries." },
   { title: "Designing BIR SSA IR", category: "Blog", href: "/blog", desc: "Compiler architecture deep dive." },
@@ -42,19 +41,15 @@ export default function Search() {
           gap: "8px",
           padding: "6px 14px",
           borderRadius: "6px",
-          border: "1px solid #e1e4e8",
-          background: "#f8f9fa",
-          color: "#586069",
+          border: "1px solid #1e293b",
+          background: "#111827",
+          color: "#94a3b8",
           fontSize: "13px",
           fontFamily: "'Inter', sans-serif",
           cursor: "pointer",
         }}
       >
-        <SearchIcon className="w-4 h-4" />
-        <span>Search ecosystem...</span>
-        <kbd style={{ fontSize: "10px", background: "#ffffff", padding: "1px 4px", borderRadius: "3px", border: "1px solid #ccc" }}>
-          ⌘K
-        </kbd>
+        <span>Search [?]</span>
       </button>
 
       {open && (
@@ -62,7 +57,7 @@ export default function Search() {
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(0,0,0,0.4)",
+            background: "rgba(0,0,0,0.7)",
             zIndex: 1000,
             display: "flex",
             alignItems: "flex-start",
@@ -73,21 +68,21 @@ export default function Search() {
         >
           <div
             style={{
-              width: "100%",
+              width: "90%",
               maxWidth: "600px",
-              background: "#ffffff",
+              background: "#111827",
+              border: "1px solid #1e293b",
               borderRadius: "8px",
-              boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",
+              boxShadow: "0 20px 25px -5px rgba(0,0,0,0.5)",
               overflow: "hidden",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ padding: "16px", borderBottom: "1px solid #e1e4e8", display: "flex", alignItems: "center", gap: "12px" }}>
-              <SearchIcon className="w-5 h-5 text-gray-400" />
+            <div style={{ padding: "16px", borderBottom: "1px solid #1e293b", display: "flex", alignItems: "center", gap: "12px" }}>
               <input
                 autoFocus
                 type="text"
-                placeholder="Search documentation, book chapters, packages..."
+                placeholder="Type to search documentation, book chapters, packages..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 style={{
@@ -96,16 +91,29 @@ export default function Search() {
                   outline: "none",
                   fontSize: "16px",
                   fontFamily: "'Inter', sans-serif",
+                  background: "transparent",
+                  color: "#ffffff",
                 }}
               />
-              <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", cursor: "pointer" }}>
-                <X className="w-5 h-5 text-gray-400" />
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  background: "#1e293b",
+                  border: "none",
+                  color: "#ffffff",
+                  padding: "4px 10px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "13px",
+                }}
+              >
+                Close [X]
               </button>
             </div>
 
             <div style={{ maxHeight: "360px", overflowY: "auto", padding: "8px" }}>
               {results.length === 0 ? (
-                <div style={{ padding: "24px", textAlign: "center", color: "#888", fontSize: "14px" }}>
+                <div style={{ padding: "24px", textAlign: "center", color: "#64748b", fontSize: "14px" }}>
                   No matching results found.
                 </div>
               ) : (
@@ -119,16 +127,16 @@ export default function Search() {
                       padding: "12px 16px",
                       borderRadius: "6px",
                       textDecoration: "none",
-                      color: "#1a1a2e",
+                      color: "#e2e8f0",
                     }}
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ fontWeight: 600, fontSize: "15px" }}>{r.title}</span>
-                      <span style={{ fontSize: "11px", background: "#f0f4f8", color: "#0066cc", padding: "2px 6px", borderRadius: "4px", fontWeight: 600 }}>
+                      <span style={{ fontSize: "11px", background: "#1e293b", color: "#60a5fa", padding: "2px 6px", borderRadius: "4px", fontWeight: 600 }}>
                         {r.category}
                       </span>
                     </div>
-                    <p style={{ fontSize: "13px", color: "#586069", margin: "4px 0 0" }}>{r.desc}</p>
+                    <p style={{ fontSize: "13px", color: "#94a3b8", margin: "4px 0 0" }}>{r.desc}</p>
                   </Link>
                 ))
               )}

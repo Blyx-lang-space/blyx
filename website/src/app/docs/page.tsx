@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Rocket, Terminal, Code, Cpu, Layers } from 'lucide-react';
+import { BookOpen, Rocket, Cpu } from 'lucide-react';
 
 export default function DocsPage() {
   const chapters = [
@@ -49,7 +49,7 @@ export default function DocsPage() {
           <ul className="space-y-2 text-sm text-[#6b7a96]">
             <li><a href="https://github.com/Blyx-lang-space/blyx/tree/main/examples" target="_blank" rel="noopener noreferrer" className="hover:text-[#00e5ff] transition-colors">Standard Code Examples</a></li>
             <li><Link href="/blog" className="hover:text-[#00e5ff] transition-colors">Engineering Deep Dives</Link></li>
-            <li><Link href="/benchmarks" className="hover:text-[#00e5ff] transition-colors">Performance Methodology</Link></li>
+            <li><Link href="/metrics" className="hover:text-[#00e5ff] transition-colors">Performance Methodology</Link></li>
           </ul>
         </div>
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { Cpu, Zap, Activity, HardDrive } from 'lucide-react';
 
 export default function BenchmarksPage() {
   const benchmarks = [

@@ -10,8 +10,8 @@ export default function Navbar() {
   return (
     <nav
       style={{
-        background: "#0a0e1a",
-        borderBottom: "1px solid #1e293b",
+        background: "#ffffff",
+        borderBottom: "1px solid #e5e7eb",
         padding: "0 max(20px, calc((100% - 1300px) / 2))",
         display: "flex",
         alignItems: "center",
@@ -22,7 +22,7 @@ export default function Navbar() {
         zIndex: 100,
       }}
     >
-      {/* Left: Bigger Logo & Brand Text */}
+      {/* Left: Brand Logo & Title */}
       <Link
         href="/"
         style={{
@@ -38,7 +38,7 @@ export default function Navbar() {
             fontFamily: "'Inter', sans-serif",
             fontWeight: 700,
             fontSize: "26px",
-            color: "#ffffff",
+            color: "#1f1f1f",
             letterSpacing: "-0.5px",
           }}
         >
@@ -46,7 +46,7 @@ export default function Navbar() {
         </span>
       </Link>
 
-      {/* Desktop Links (No icons, text only) */}
+      {/* Navigation Text Links (Rust Orange hover) */}
       <div
         style={{
           display: "flex",
@@ -71,7 +71,7 @@ export default function Navbar() {
               fontFamily: "'Inter', sans-serif",
               fontWeight: 500,
               fontSize: "15px",
-              color: "#94a3b8",
+              color: "#616161",
               textDecoration: "none",
             }}
           >
@@ -87,25 +87,25 @@ export default function Navbar() {
             fontFamily: "'Inter', sans-serif",
             fontWeight: 600,
             fontSize: "15px",
-            color: "#60a5fa",
+            color: "#d34516",
             textDecoration: "none",
-            border: "1px solid #1e293b",
+            border: "1px solid #e5e7eb",
             padding: "6px 14px",
             borderRadius: "6px",
-            background: "#111827",
+            background: "#ffffff",
           }}
         >
           GitHub ↗
         </a>
       </div>
 
-      {/* Mobile Menu Toggle Button (Text/Words only) */}
+      {/* Mobile Menu Toggle Button */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
         style={{
-          background: "#111827",
-          border: "1px solid #1e293b",
-          color: "#ffffff",
+          background: "#ffffff",
+          border: "1px solid #e5e7eb",
+          color: "#1f1f1f",
           padding: "8px 14px",
           borderRadius: "6px",
           fontFamily: "'Inter', sans-serif",
@@ -126,8 +126,8 @@ export default function Navbar() {
             top: "72px",
             left: 0,
             right: 0,
-            background: "#0a0e1a",
-            borderBottom: "1px solid #1e293b",
+            background: "#ffffff",
+            borderBottom: "1px solid #e5e7eb",
             padding: "20px 24px",
             display: "flex",
             flexDirection: "column",
@@ -151,7 +151,7 @@ export default function Navbar() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "16px",
                 fontWeight: 500,
-                color: "#e2e8f0",
+                color: "#1f1f1f",
                 textDecoration: "none",
               }}
             >
@@ -166,7 +166,7 @@ export default function Navbar() {
               fontFamily: "'Inter', sans-serif",
               fontSize: "16px",
               fontWeight: 600,
-              color: "#60a5fa",
+              color: "#d34516",
               textDecoration: "none",
               paddingTop: "8px",
             }}

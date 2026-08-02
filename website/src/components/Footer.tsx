@@ -6,9 +6,9 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: "#060913",
-        borderTop: "1px solid #1e293b",
-        color: "#94a3b8",
+        background: "#f6f8fa",
+        borderTop: "1px solid #e5e7eb",
+        color: "#616161",
         padding: "60px max(20px, calc((100% - 1300px) / 2)) 40px",
       }}
     >
@@ -29,7 +29,7 @@ export default function Footer() {
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 700,
                 fontSize: "24px",
-                color: "#ffffff",
+                color: "#1f1f1f",
               }}
             >
               Blyx
@@ -39,7 +39,7 @@ export default function Footer() {
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: "14px",
-              color: "#94a3b8",
+              color: "#616161",
               lineHeight: 1.6,
             }}
           >
@@ -50,7 +50,7 @@ export default function Footer() {
               href="https://github.com/Rahulchaube1"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#60a5fa", textDecoration: "none" }}
+              style={{ color: "#d34516", textDecoration: "none" }}
             >
               Rahul Chaube
             </a>
@@ -65,7 +65,7 @@ export default function Footer() {
               fontFamily: "'Inter', sans-serif",
               fontWeight: 600,
               fontSize: "14px",
-              color: "#ffffff",
+              color: "#1f1f1f",
               marginBottom: "16px",
               textTransform: "uppercase",
               letterSpacing: "0.5px",
@@ -86,7 +86,7 @@ export default function Footer() {
                 display: "block",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "14px",
-                color: "#94a3b8",
+                color: "#616161",
                 textDecoration: "none",
                 marginBottom: "10px",
               }}
@@ -103,7 +103,7 @@ export default function Footer() {
               fontFamily: "'Inter', sans-serif",
               fontWeight: 600,
               fontSize: "14px",
-              color: "#ffffff",
+              color: "#1f1f1f",
               marginBottom: "16px",
               textTransform: "uppercase",
               letterSpacing: "0.5px",
@@ -124,7 +124,7 @@ export default function Footer() {
                 display: "block",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "14px",
-                color: "#94a3b8",
+                color: "#616161",
                 textDecoration: "none",
                 marginBottom: "10px",
               }}
@@ -134,14 +134,14 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Official Links */}
+        {/* Social Links */}
         <div>
           <h4
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 600,
               fontSize: "14px",
-              color: "#ffffff",
+              color: "#1f1f1f",
               marginBottom: "16px",
               textTransform: "uppercase",
               letterSpacing: "0.5px",
@@ -163,7 +163,7 @@ export default function Footer() {
                 display: "block",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "14px",
-                color: "#94a3b8",
+                color: "#616161",
                 textDecoration: "none",
                 marginBottom: "10px",
               }}
@@ -176,7 +176,7 @@ export default function Footer() {
 
       <div
         style={{
-          borderTop: "1px solid #1e293b",
+          borderTop: "1px solid #e5e7eb",
           paddingTop: "24px",
           display: "flex",
           justifyContent: "space-between",
@@ -184,10 +184,10 @@ export default function Footer() {
           gap: "12px",
         }}
       >
-        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#64748b" }}>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#616161" }}>
           Dual MIT + Apache 2.0 License • Copyright © {new Date().getFullYear()} Rahul Chaube
         </span>
-        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#64748b" }}>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#616161" }}>
           https://blyx-lang.space
         </span>
       </div>

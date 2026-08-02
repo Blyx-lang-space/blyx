@@ -12,7 +12,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ slug: 
   const chapter = chapters[slug] || chapters['ch01-getting-started'];
 
   return (
-    <div style={{ background: '#0a0e1a', color: '#e2e8f0', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: '#ffffff', color: '#1f1f1f', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
       <div style={{ flex: 1 }}>
         <BookLayout currentSlug={slug}>

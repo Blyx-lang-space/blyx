@@ -134,65 +134,109 @@ export default function HomePage() {
     <div style={{ background: "#ffffff", color: "#111827", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Navbar />
 
-      {/* ══ SECTION 1 — HERO ══ */}
+      {/* ══ SECTION 1 — HERO (Rust-style 2-column layout) ══ */}
       <section style={{
         background: "#ffffff",
-        padding: sectionPad,
-        textAlign: "center",
-        borderBottom: "1px solid #e5e7eb",
+        borderBottom: "4px solid #e5e7eb",
+        padding: "clamp(56px,7vw,96px) clamp(20px,5vw,80px)",
       }}>
-        <div style={{ maxWidth: "960px", margin: "0 auto" }}>
-          <div style={{ marginBottom: "40px", display: "flex", justifyContent: "center" }}>
-            <Image src="/blyx.png" alt="Blyx Language Logo" width={160} height={160} priority />
+        <div style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "1fr auto",
+          gap: "clamp(40px,5vw,80px)",
+          alignItems: "center",
+        }}>
+
+          {/* LEFT — Wordmark + tagline */}
+          <div>
+            {/* Giant wordmark exactly like "Rust" */}
+            <h1 style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 900,
+              fontSize: "clamp(72px,12vw,160px)",
+              color: "#111827",
+              lineHeight: 0.95,
+              letterSpacing: "-6px",
+              margin: "0 0 clamp(20px,3vw,36px) 0",
+            }}>
+              Blyx
+            </h1>
+
+            {/* Tagline — same copy as Rust's */}
+            <p style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 400,
+              fontSize: "clamp(18px,2.2vw,26px)",
+              color: "#374151",
+              lineHeight: 1.55,
+              margin: 0,
+              maxWidth: "520px",
+            }}>
+              A language empowering everyone<br />
+              to build reliable and efficient software.
+            </p>
           </div>
-          <h1 style={{
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 900,
-            fontSize: "clamp(42px,7vw,80px)",
-            color: "#111827",
-            lineHeight: 1.1,
-            letterSpacing: "-2.5px",
-            margin: "0 auto 28px",
+
+          {/* RIGHT — Big CTA button + version link (exactly like Rust) */}
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "clamp(14px,2vw,20px)",
+            minWidth: "clamp(200px,20vw,280px)",
           }}>
-            A language empowering everyone<br />
-            to build reliable and efficient software.
-          </h1>
-          <p style={{
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 500,
-            fontSize: "clamp(20px,3vw,28px)",
-            color: "#6b7280",
-            margin: "0 auto 52px",
-            maxWidth: "700px",
-            lineHeight: 1.6,
-          }}>
-            Performance. Safety. Productivity.
-          </p>
-          <div style={{ display: "flex", gap: "20px", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/download" style={{
-              background: "#e05d44", color: "#ffffff",
-              padding: "clamp(14px,2vw,20px) clamp(28px,4vw,48px)",
-              borderRadius: "6px",
-              fontFamily: "'Inter', sans-serif", fontWeight: 800,
-              fontSize: "clamp(17px,2vw,22px)", textDecoration: "none",
-              display: "inline-block", letterSpacing: "-0.3px",
+              background: "#e05d44",
+              color: "#ffffff",
+              padding: "clamp(18px,2.5vw,26px) clamp(32px,4vw,56px)",
+              borderRadius: "0",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 900,
+              fontSize: "clamp(16px,1.8vw,22px)",
+              textDecoration: "none",
+              display: "block",
+              textAlign: "center",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+              width: "100%",
+              boxSizing: "border-box" as const,
             }}>
               Get Started
             </Link>
-            <a href="https://github.com/Rahulchaube1/blyxxxx/releases/tag/v0.1.0-alpha"
-              target="_blank" rel="noopener noreferrer"
+
+            <a
+              href="https://github.com/Rahulchaube1/blyxxxx/releases/tag/v0.1.0-alpha"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                background: "#ffffff", color: "#111827",
-                padding: "clamp(14px,2vw,20px) clamp(28px,4vw,48px)",
-                borderRadius: "6px", border: "2px solid #e5e7eb",
-                fontFamily: "'Inter', sans-serif", fontWeight: 700,
-                fontSize: "clamp(17px,2vw,22px)", textDecoration: "none",
-                display: "inline-block", letterSpacing: "-0.3px",
-              }}>
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                fontSize: "clamp(15px,1.6vw,19px)",
+                color: "#e05d44",
+                textDecoration: "underline",
+                textAlign: "center",
+                textUnderlineOffset: "3px",
+              }}
+            >
               Version 0.1.0-alpha
             </a>
           </div>
         </div>
+
+        {/* Responsive: stack on mobile */}
+        <style>{`
+          @media (max-width: 640px) {
+            section:first-of-type > div {
+              grid-template-columns: 1fr !important;
+              text-align: center;
+            }
+            section:first-of-type p {
+              margin: 0 auto !important;
+            }
+          }
+        `}</style>
       </section>
 
       {/* ══ SECTION 2 — WHY BLYX (3 sharp cards, SVG icons, Waves BG) ══ */}

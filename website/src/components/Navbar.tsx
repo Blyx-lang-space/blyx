@@ -1,157 +1,153 @@
 "use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+const NAV_LINKS = [
+  ["Install", "/download"],
+  ["Learn", "/learn"],
+  ["Playground", "/play"],
+  ["Tools", "/compiler"],
+  ["Community", "/community"],
+  ["Blog", "/blog"],
+];
+
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <header style={{ position: "sticky", top: 0, zIndex: 100, background: "#ffffff", borderBottom: "1px solid #e1e4e8" }}>
-      {/* Top Banner (Optional release notification bar) */}
-      <div style={{ background: "#24292e", color: "#ffffff", textAlign: "center", padding: "6px 16px", fontSize: "13px", fontFamily: "'Inter', sans-serif" }}>
-        Blyx v0.1.0-alpha is out!{" "}
-        <a href="https://github.com/Rahulchaube1/blyxxxx/releases" target="_blank" rel="noopener noreferrer" style={{ color: "#ff8c66", textDecoration: "underline", fontWeight: 600 }}>
-          Check out the release notes {"->"}
+    <header>
+      {/* Release Banner */}
+      <div style={{
+        background: "#1f2937",
+        color: "#f9fafb",
+        textAlign: "center",
+        padding: "10px 24px",
+        fontSize: "clamp(13px, 2vw, 15px)",
+        fontFamily: "'Inter', sans-serif",
+        fontWeight: 500,
+      }}>
+        Blyx v0.1.0-alpha is here!{" "}
+        <a
+          href="https://github.com/Rahulchaube1/blyxxxx/releases"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#fb923c", fontWeight: 700, textDecoration: "underline" }}
+        >
+          Read the release notes {"->"}
         </a>
       </div>
 
-      {/* Main Navigation Bar */}
-      <nav
-        style={{
+      {/* Main Navbar */}
+      <nav style={{
+        background: "#ffffff",
+        borderBottom: "2px solid #e5e7eb",
+        position: "sticky",
+        top: 0,
+        zIndex: 100,
+      }}>
+        <div style={{
           maxWidth: "1280px",
           margin: "0 auto",
-          padding: "0 24px",
+          padding: "0 clamp(20px, 4vw, 64px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          height: "64px",
-        }}
-      >
-        {/* Brand */}
-        <Link
-          href="/"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            textDecoration: "none",
-          }}
-        >
-          <Image src="/blyx.png" alt="Blyx Logo" width={40} height={40} priority />
-          <span
-            style={{
+          height: "clamp(68px, 8vw, 80px)",
+        }}>
+          {/* Logo + Brand */}
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: "14px", textDecoration: "none" }}>
+            <Image src="/blyx.png" alt="Blyx Logo" width={48} height={48} priority />
+            <span style={{
               fontFamily: "'Inter', sans-serif",
-              fontWeight: 800,
-              fontSize: "24px",
-              color: "#24292e",
-              letterSpacing: "-0.5px",
-            }}
-          >
-            Blyx
-          </span>
-        </Link>
+              fontWeight: 900,
+              fontSize: "clamp(22px, 3vw, 28px)",
+              color: "#111827",
+              letterSpacing: "-1px",
+            }}>
+              Blyx
+            </span>
+          </Link>
 
-        {/* Navigation Links (Text only, no icons) */}
-        <div style={{ display: "flex", gap: "28px", alignItems: "center" }} className="hidden md:flex">
-          {[
-            ["Install", "/download"],
-            ["Learn", "/learn"],
-            ["Playground", "/play"],
-            ["Tools", "/compiler"],
-            ["Community", "/community"],
-            ["Blog", "/blog"],
-          ].map(([label, href]) => (
-            <Link
-              key={href}
-              href={href}
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 500,
-                fontSize: "15px",
-                color: "#586069",
-                textDecoration: "none",
-              }}
-            >
-              {label}
-            </Link>
-          ))}
-
-          <a
-            href="https://github.com/Rahulchaube1/blyxxxx"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 600,
-              fontSize: "14px",
-              color: "#d34516",
-              textDecoration: "none",
-              border: "1px solid #e1e4e8",
-              padding: "6px 16px",
-              borderRadius: "6px",
-              background: "#ffffff",
-            }}
-          >
-            GitHub ↗
-          </a>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          style={{
-            background: "#ffffff",
-            border: "1px solid #e1e4e8",
-            color: "#24292e",
-            padding: "8px 14px",
-            borderRadius: "6px",
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "14px",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-          className="md:hidden"
-        >
-          {mobileOpen ? "Close [X]" : "Menu [=]"}
-        </button>
-
-        {/* Mobile Dropdown */}
-        {mobileOpen && (
-          <div
-            style={{
-              position: "absolute",
-              top: "98px",
-              left: 0,
-              right: 0,
-              background: "#ffffff",
-              borderBottom: "1px solid #e1e4e8",
-              padding: "20px 24px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-              boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
-            }}
-            className="md:hidden"
-          >
-            {[
-              ["Install", "/download"],
-              ["Learn", "/learn"],
-              ["Playground", "/play"],
-              ["Tools", "/compiler"],
-              ["Community", "/community"],
-              ["Blog", "/blog"],
-            ].map(([label, href]) => (
+          {/* Desktop Nav Links */}
+          <div className="nav-links" style={{ display: "flex", gap: "clamp(18px, 3vw, 36px)", alignItems: "center" }}>
+            {NAV_LINKS.map(([label, href]) => (
               <Link
                 key={href}
                 href={href}
-                onClick={() => setMobileOpen(false)}
                 style={{
                   fontFamily: "'Inter', sans-serif",
-                  fontSize: "16px",
-                  fontWeight: 500,
-                  color: "#24292e",
+                  fontWeight: 600,
+                  fontSize: "clamp(15px, 1.5vw, 17px)",
+                  color: "#374151",
+                  textDecoration: "none",
+                  padding: "4px 0",
+                  borderBottom: "2px solid transparent",
+                  transition: "all 0.15s",
+                }}
+              >
+                {label}
+              </Link>
+            ))}
+            <a
+              href="https://github.com/Rahulchaube1/blyxxxx"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(14px, 1.4vw, 16px)",
+                color: "#ffffff",
+                textDecoration: "none",
+                background: "#e05d44",
+                padding: "10px 22px",
+                borderRadius: "8px",
+              }}
+            >
+              GitHub ↗
+            </a>
+          </div>
+
+          {/* Mobile Toggle */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="mobile-toggle"
+            style={{
+              background: "none",
+              border: "2px solid #e5e7eb",
+              color: "#111827",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              fontSize: "16px",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            {open ? "Close" : "Menu"}
+          </button>
+        </div>
+
+        {/* Mobile Drawer */}
+        {open && (
+          <div style={{
+            background: "#ffffff",
+            borderTop: "1px solid #e5e7eb",
+            padding: "24px clamp(20px, 4vw, 64px)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }} className="mobile-drawer">
+            {NAV_LINKS.map(([label, href]) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "18px",
+                  fontWeight: 600,
+                  color: "#111827",
                   textDecoration: "none",
                 }}
               >
@@ -164,18 +160,28 @@ export default function Navbar() {
               rel="noopener noreferrer"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontSize: "16px",
-                fontWeight: 600,
-                color: "#d34516",
-                textDecoration: "none",
-                paddingTop: "8px",
+                fontSize: "18px",
+                fontWeight: 700,
+                color: "#e05d44",
               }}
             >
-              GitHub Repository ↗
+              GitHub ↗
             </a>
           </div>
         )}
       </nav>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .nav-links { display: none !important; }
+          .mobile-toggle { display: block !important; }
+        }
+        @media (min-width: 901px) {
+          .nav-links { display: flex !important; }
+          .mobile-toggle { display: none !important; }
+          .mobile-drawer { display: none !important; }
+        }
+      `}</style>
     </header>
   );
 }

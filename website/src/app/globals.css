@@ -9,15 +9,14 @@
 }
 
 :root {
-  --bg: #ffffff;
-  --surface: #f8f9fa;
-  --border: #e1e4e8;
-  --text: #1a1a2e;
-  --muted: #586069;
-  --accent: #0066cc;
-  --accent-hover: #0052a3;
-  --code-bg: #f0f4f8;
-  --terminal: #1a1a2e;
+  --bg:       #0a0e1a;   /* deep navy, not pure black */
+  --surface:  #111827;   /* cards */
+  --border:   #1e293b;   /* dividers */
+  --text:     #e2e8f0;   /* primary text */
+  --muted:    #64748b;   /* secondary */
+  --accent:   #3b82f6;   /* blue */
+  --accent-2: #c084fc;   /* purple — keywords */
+  --green:    #34d399;   /* success */
 }
 
 html {
@@ -30,7 +29,7 @@ body {
   color: var(--text);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -51,7 +50,8 @@ a {
 code {
   font-family: 'Source Code Pro', 'Courier New', monospace;
   font-size: 0.875em;
-  background: var(--code-bg);
+  background: #1e293b;
+  color: #67e8f9;
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -60,6 +60,7 @@ pre code {
   background: none;
   padding: 0;
   font-size: inherit;
+  color: inherit;
 }
 
 img {

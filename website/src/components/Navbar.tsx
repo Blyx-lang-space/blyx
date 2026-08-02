@@ -1,84 +1,67 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Search from "./Search";
-import ThemeToggle from "./ThemeToggle";
-import { Github, Menu, X } from "lucide-react";
-
-const NAV_LINKS = [
-  { label: "Learn", href: "/learn" },
-  { label: "Docs", href: "/docs" },
-  { label: "Playground", href: "/play" },
-  { label: "Packages", href: "/packages" },
-  { label: "Compiler", href: "/compiler" },
-  { label: "Download", href: "/download" },
-  { label: "Examples", href: "/examples" },
-  { label: "Blog", href: "/blog" },
-  { label: "Community", href: "/community" },
-  { label: "Roadmap", href: "/roadmap" },
-];
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   return (
     <nav
       style={{
-        background: "#ffffff",
-        borderBottom: "1px solid #e1e4e8",
-        padding: "0 max(24px, calc((100% - 1400px) / 2))",
+        background: "#0a0e1a",
+        borderBottom: "1px solid #1e293b",
+        padding: "0 max(24px, calc((100% - 1200px) / 2))",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        height: "64px",
+        height: "60px",
         position: "sticky",
         top: 0,
         zIndex: 100,
       }}
     >
-      {/* Left: Brand */}
+      {/* Brand */}
       <Link
         href="/"
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "12px",
+          gap: "10px",
           textDecoration: "none",
         }}
       >
-        <Image src="/blyx.png" alt="Blyx Logo" width={32} height={32} priority />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <span
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 700,
-              fontSize: "22px",
-              color: "#1a1a2e",
-              letterSpacing: "-0.5px",
-              lineHeight: 1,
-            }}
-          >
-            Blyx
-          </span>
-          <span style={{ fontFamily: "monospace", fontSize: "10px", color: "#64748b", marginTop: "2px" }}>
-            v0.1.0-beta
-          </span>
-        </div>
+        <Image src="/blyx.png" alt="Blyx Logo" width={28} height={28} priority />
+        <span
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 700,
+            fontSize: "20px",
+            color: "#f1f5f9",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          Blyx
+        </span>
       </Link>
 
-      {/* Center/Right Links */}
-      <div style={{ display: "flex", gap: "20px", alignItems: "center" }} className="hidden xl:flex">
-        {NAV_LINKS.map(({ label, href }) => (
+      {/* Nav Links */}
+      <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
+        {[
+          ["Install", "/download"],
+          ["Learn", "/learn"],
+          ["Play", "/play"],
+          ["Tools", "/compiler"],
+          ["Community", "/community"],
+          ["Blog", "/blog"],
+        ].map(([label, href]) => (
           <Link
             key={href}
             href={href}
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 500,
-              fontSize: "15px",
-              color: "#586069",
+              fontSize: "14px",
+              color: "#94a3b8",
               textDecoration: "none",
             }}
           >
@@ -87,18 +70,21 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* Actions: Search, GitHub, ThemeToggle */}
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <Search />
-        <ThemeToggle />
+      {/* Right GitHub link */}
+      <div>
         <a
           href="https://github.com/Rahulchaube1/blyxxxx"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: "#586069", textDecoration: "none" }}
-          aria-label="GitHub Repository"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 500,
+            fontSize: "14px",
+            color: "#60a5fa",
+            textDecoration: "none",
+          }}
         >
-          <Github className="w-5 h-5" />
+          GitHub ↗
         </a>
       </div>
     </nav>

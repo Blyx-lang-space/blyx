@@ -195,8 +195,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══ SECTION 2 — WHY BLYX (3 sharp cards, SVG icons) ══ */}
-      <section style={{ background: "#ffffff", padding: sectionPad, borderBottom: "1px solid #e5e7eb" }}>
+      {/* ══ SECTION 2 — WHY BLYX (3 sharp cards, SVG icons, Waves BG) ══ */}
+      <section style={{ position: "relative", overflow: "hidden", borderBottom: "1px solid #e5e7eb" }}>
+        {/* Waves shader background */}
+        <WavesShader style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }} />
+        {/* Very light overlay — cards float on top */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "rgba(255,255,255,0.82)" }} />
+        <div style={{ position: "relative", zIndex: 2, padding: sectionPad }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <h2 style={{ ...h2Style, textAlign: "center", marginBottom: "72px" }}>Why Blyx?</h2>
           <div style={{
@@ -239,14 +244,16 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+        </div>
       </section>
 
-      {/* ══ SECTION 3 — BUILD IT IN BLYX (4 use-case cards, SVG icons) ══ */}
-      <section style={{
-        background: "#f9fafb",
-        padding: sectionPad,
-        borderBottom: "1px solid #e5e7eb",
-      }}>
+      {/* ══ SECTION 3 — BUILD IT IN BLYX (4 use-case cards, SVG icons, Waves BG) ══ */}
+      <section style={{ position: "relative", overflow: "hidden", borderBottom: "1px solid #e5e7eb" }}>
+        {/* Waves shader background */}
+        <WavesShader style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }} />
+        {/* Slightly darker overlay for the grey-tinted section */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "rgba(249,250,251,0.80)" }} />
+        <div style={{ position: "relative", zIndex: 2, padding: sectionPad }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <h2 style={{ ...h2Style, textAlign: "center", marginBottom: "72px" }}>Build it in Blyx</h2>
           <div style={{
@@ -300,6 +307,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
         </div>
       </section>
 
@@ -455,8 +463,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══ SECTION 6 — TESTIMONIALS ══ */}
-      <section style={{ background: "#f9fafb", padding: sectionPad, borderTop: "1px solid #e5e7eb" }}>
+      {/* ══ SECTION 6 — TESTIMONIALS (Waves BG) ══ */}
+      <section style={{ position: "relative", overflow: "hidden", borderTop: "1px solid #e5e7eb" }}>
+        <WavesShader style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "rgba(249,250,251,0.82)" }} />
+        <div style={{ position: "relative", zIndex: 2, padding: sectionPad }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <h2 style={{ ...h2Style, textAlign: "center", marginBottom: "16px" }}>
             Loved by developers worldwide
@@ -507,6 +518,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
         </div>
       </section>
 

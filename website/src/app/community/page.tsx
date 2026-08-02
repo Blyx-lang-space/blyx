@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
+import MarqueSection from "@/components/MarqueSection";
 import Footer from "@/components/Footer";
 
 const AUTHORS = [
@@ -259,6 +260,7 @@ export default function CommunityPage() {
         </section>
       </main>
 
+      <MarqueSection />
       <Footer />
     </div>
   );

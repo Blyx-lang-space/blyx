@@ -1,9 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
 
-/* ──────────────────────────────────────────────
-   Waves WebGL1 shader — exact spec from prompt
-────────────────────────────────────────────── */
+import React, { useEffect, useRef } from "react";
 
 const VERT = `
 attribute vec2 a_pos;
@@ -11,6 +8,21 @@ void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
 `;
 
 const FRAG = `
+// "Waves" — made with the 21st.dev Shader Builder
+// Packed WebGL1 uniforms (the shader exposes readable u_* aliases as macros):
+//   u_colors[8] (first 4 used)
+//   vec3(0.102, 0.078, 0.137)
+//   vec3(0.718, 0.365, 0.412)
+//   vec3(0.918, 0.804, 0.761)
+//   vec3(1.000, 0.961, 0.922)
+//   u_scene = vec4(canvas width, canvas height, seconds * -0.67, 4.0)
+//   u_shape = vec4(1.32, 0.49, 0.84, 0.01)
+//   u_surface = vec4(1.73, 1.08, 0.07, 2.00)
+//   u_finish = vec4(2.27, 0.00, 0.040, 0.35)
+//   u_transform = vec4(4984.0, 3.37, 0.40, 1.0)
+//   u_space = vec4(-0.13, 0.05, pointer x, pointer y)
+//   u_cursor = vec4(presence, 3.0, 0.54, 0.56)
+
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
 #else
@@ -18,12 +30,14 @@ precision mediump float;
 #endif
 
 uniform vec3 u_colors[8];
-uniform vec4 u_scene;
-uniform vec4 u_shape;
-uniform vec4 u_surface;
-uniform vec4 u_finish;
-uniform vec4 u_transform;
-uniform vec4 u_space;
+// Seven packed vectors + eight colour vectors = 15 fragment uniform vectors,
+// one below WebGL1's guaranteed minimum. Macros preserve the public u_* API.
+uniform vec4 u_scene;      // resolution.xy, time, colour count
+uniform vec4 u_shape;      // scale, intensity, paramA, warp
+uniform vec4 u_surface;    // detail, contrast, brightness, saturation
+uniform vec4 u_finish;     // hue, vignette, blur, grain
+uniform vec4 u_transform;  // seed, rotation, drift, OKLab toggle
+uniform vec4 u_space;      // offset.xy, pointer.xy
 uniform vec4 u_cursor;
 
 #define u_resolution u_scene.xy
@@ -44,6 +58,7 @@ uniform vec4 u_cursor;
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 #define u_seed u_transform.x
 #else
+// Keep hash inputs inside mediump's guaranteed ±2^14 range.
 #define u_seed mod(u_transform.x, 31.0)
 #endif
 #define u_rotate u_transform.y
@@ -65,10 +80,21 @@ float hash21(vec2 p) {
   return fract(p.x * p.y);
 }
 
+// Even, un-structured white noise for film grain (Dave Hoskins hash12). The
+// multiply hash above is fine for value noise but shows a faint axis-aligned
+// mesh at integer fragment coords, which reads as a net over flat areas.
 float grainHash(vec2 p) {
   vec3 p3 = fract(vec3(p.xyx) * 0.1031);
   p3 += dot(p3, p3.yzx + 33.33);
   return fract((p3.x + p3.y) * p3.z);
+}
+
+vec2 hash22(vec2 p) {
+#ifndef GL_FRAGMENT_PRECISION_HIGH
+  p = mod(p, 31.0);
+#endif
+  float n = sin(dot(p, vec2(41.0, 289.0)));
+  return fract(vec2(15731.743, 7892.321) * n);
 }
 
 float noise(vec2 p) {
@@ -92,56 +118,73 @@ float fbm(vec2 p) {
   return v;
 }
 
+// --- OKLab colour mixing (perceptual), gated by u_oklab -----------------------
 vec3 srgbToLinear(vec3 c) {
-  return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(0.04045, c));
+  return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)),
+    step(0.04045, c));
 }
 vec3 linearToSrgb(vec3 c) {
-  return mix(c * 12.92, 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
+  // max() guards the sRGB branch: out-of-gamut OKLab interpolations can send a
+  // channel negative, and pow(negative, …) is NaN which mix()/step() would
+  // then propagate. The linear branch clips such channels to 0 downstream.
+  return mix(c * 12.92, 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055,
+    step(0.0031308, c));
 }
 vec3 linToOklab(vec3 c) {
-  float l = 0.4122214708*c.r + 0.5363325363*c.g + 0.0514459929*c.b;
-  float m = 0.2119034982*c.r + 0.6806995451*c.g + 0.1073969566*c.b;
-  float s = 0.0883024619*c.r + 0.2817188376*c.g + 0.6299787005*c.b;
-  l = pow(max(l,0.0),1.0/3.0); m = pow(max(m,0.0),1.0/3.0); s = pow(max(s,0.0),1.0/3.0);
-  return vec3(0.2104542553*l+0.7936177850*m-0.0040720468*s,
-              1.9779984951*l-2.4285922050*m+0.4505937099*s,
-              0.0259040371*l+0.7827717662*m-0.8086757660*s);
+  float l = 0.4122214708 * c.r + 0.5363325363 * c.g + 0.0514459929 * c.b;
+  float m = 0.2119034982 * c.r + 0.6806995451 * c.g + 0.1073969566 * c.b;
+  float s = 0.0883024619 * c.r + 0.2817188376 * c.g + 0.6299787005 * c.b;
+  l = pow(max(l, 0.0), 1.0 / 3.0);
+  m = pow(max(m, 0.0), 1.0 / 3.0);
+  s = pow(max(s, 0.0), 1.0 / 3.0);
+  return vec3(
+    0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s);
 }
 vec3 oklabToLin(vec3 c) {
-  float l = c.x+0.3963377774*c.y+0.2158037573*c.z;
-  float m = c.x-0.1055613458*c.y-0.0638541728*c.z;
-  float s = c.x-0.0894841775*c.y-1.2914855480*c.z;
-  l=l*l*l; m=m*m*m; s=s*s*s;
-  return vec3(4.0767416621*l-3.3077115913*m+0.2309699292*s,
-              -1.2684380046*l+2.6097574011*m-0.3413193965*s,
-              -0.0041960863*l-0.7034186147*m+1.7076147010*s);
+  float l = c.x + 0.3963377774 * c.y + 0.2158037573 * c.z;
+  float m = c.x - 0.1055613458 * c.y - 0.0638541728 * c.z;
+  float s = c.x - 0.0894841775 * c.y - 1.2914855480 * c.z;
+  l = l * l * l; m = m * m * m; s = s * s * s;
+  return vec3(
+    4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s);
 }
 vec3 mixColour(vec3 a, vec3 b, float t) {
   if (u_oklab > 0.5) {
     vec3 la = linToOklab(srgbToLinear(a));
     vec3 lb = linToOklab(srgbToLinear(b));
-    return clamp(linearToSrgb(oklabToLin(mix(la,lb,t))),0.0,1.0);
+    return clamp(linearToSrgb(oklabToLin(mix(la, lb, t))), 0.0, 1.0);
   }
-  return mix(a,b,t);
+  return mix(a, b, t);
 }
 
+// Mix through the recipe colours; x is clamped to 0..1. WebGL1 forbids
+// dynamic uniform indexing in fragment shaders, hence the constant loop.
 vec3 palette(float x) {
   float n = max(u_colorCount - 1.0, 1.0);
-  float f = clamp(x,0.0,1.0) * n;
+  float f = clamp(x, 0.0, 1.0) * n;
   vec3 col = u_colors[0];
   for (int i = 0; i < 7; i++) {
     if (float(i) < n)
-      col = mixColour(col, u_colors[i+1], smoothstep(0.0,1.0,clamp(f-float(i),0.0,1.0)));
+      col = mixColour(col, u_colors[i + 1],
+        smoothstep(0.0, 1.0, clamp(f - float(i), 0.0, 1.0)));
   }
   return col;
 }
 
 vec3 hueRotate(vec3 col, float a) {
-  const mat3 toYIQ = mat3(0.299,0.596,0.211, 0.587,-0.274,-0.523, 0.114,-0.322,0.312);
-  const mat3 toRGB = mat3(1.0,1.0,1.0, 0.956,-0.272,-1.106, 0.621,-0.647,1.703);
+  const mat3 toYIQ = mat3(0.299, 0.596, 0.211,
+                          0.587, -0.274, -0.523,
+                          0.114, -0.322, 0.312);
+  const mat3 toRGB = mat3(1.0, 1.0, 1.0,
+                          0.956, -0.272, -1.106,
+                          0.621, -0.647, 1.703);
   vec3 yiq = toYIQ * col;
   float ca = cos(a), sa = sin(a);
-  yiq = vec3(yiq.x, yiq.y*ca - yiq.z*sa, yiq.y*sa + yiq.z*ca);
+  yiq = vec3(yiq.x, yiq.y * ca - yiq.z * sa, yiq.y * sa + yiq.z * ca);
   return toRGB * yiq;
 }
 
@@ -157,46 +200,104 @@ void main() {
   vec2 screenUv = uv;
   vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy)
     / min(u_resolution.x, u_resolution.y);
+  float cursorMask = 0.0;
 
+  // Cursor modes 1–3 are local distortions. Push shifts the same screen-space
+  // coordinates before field transforms, so Zoom/Rotate don't change its feel.
+  if (u_cursorPresence > 0.001) {
+    // u_mouse is normalized to -1..1 in canvas space. Convert it to the same
+    // aspect-corrected screen space as p so effects stay under the cursor.
+    vec2 cursor = (0.5 * u_mouse * u_resolution.xy)
+      / min(u_resolution.x, u_resolution.y);
+    vec2 cursorDelta = p - cursor;
+    if (u_cursorEffect < 0.5) {
+      p += cursor * u_cursorPresence * u_cursorStrength * 0.55;
+    } else {
+      float cursorDistance = length(cursorDelta);
+      vec2 cursorDirection = cursorDelta / max(cursorDistance, 0.0001);
+      cursorMask = u_cursorPresence
+        * (1.0 - smoothstep(0.0, u_cursorRadius, cursorDistance));
+      if (u_cursorEffect < 1.5) {
+        p -= cursorDirection * cursorMask * u_cursorStrength * 0.24;
+      } else if (u_cursorEffect < 2.5) {
+        float cursorAngle = cursorMask * u_cursorStrength * 2.2;
+        float cc = cos(cursorAngle), cs = sin(cursorAngle);
+        p = cursor + mat2(cc, -cs, cs, cc) * cursorDelta;
+      } else if (u_cursorEffect < 3.5) {
+        float ripple = sin(
+          cursorDistance / max(u_cursorRadius, 0.001) * 18.0 - u_time * 5.0);
+        p -= cursorDirection * ripple * cursorMask * u_cursorStrength * 0.07;
+      }
+    }
+  }
+
+  // Keep presets that read uv (rather than p) in the same warped space.
   uv = p * min(u_resolution.x, u_resolution.y) / u_resolution.xy + 0.5;
   p *= u_scale;
+  // Field transform: rotate, pan, pointer push, slow drift.
   if (abs(u_rotate) > 0.0001) {
     float cr = cos(u_rotate), sr = sin(u_rotate);
-    p = mat2(cr,-sr,sr,cr) * p;
+    p = mat2(cr, -sr, sr, cr) * p;
   }
   p += u_offset;
   if (u_drift > 0.0001)
-    p += u_drift * vec2(sin(u_time*0.31), cos(u_time*0.23));
-  if (u_warp > 0.0)
-    p += u_warp * (vec2(fbm(p*u_detail+u_seed), fbm(p*u_detail+vec2(5.2,1.3))) - 0.5);
-
-  vec3 col = shade(uv, p, u_time);
-
-  if (abs(u_contrast - 1.0) > 0.0001) col = (col - 0.5) * u_contrast + 0.5;
+    p += u_drift * vec2(sin(u_time * 0.31), cos(u_time * 0.23));
+  // Organic domain warp.
+  if (u_warp > 0.0) {
+    p += u_warp * (vec2(
+      fbm(p * u_detail + u_seed),
+      fbm(p * u_detail + vec2(5.2, 1.3))) - 0.5);
+  }
+  // Shade, with an optional soft 5-tap blur.
+  vec3 col;
+  if (u_blur > 0.0) {
+    float e = u_blur;
+    float pe = e * u_scale;
+    vec2 uvE = vec2(e) * min(u_resolution.x, u_resolution.y) / u_resolution.xy;
+    col  = shade(uv, p, u_time) * 0.36;
+    col += shade(uv + vec2(uvE.x, 0.0), p + vec2(pe, 0.0), u_time) * 0.16;
+    col += shade(uv - vec2(uvE.x, 0.0), p - vec2(pe, 0.0), u_time) * 0.16;
+    col += shade(uv + vec2(0.0, uvE.y), p + vec2(0.0, pe), u_time) * 0.16;
+    col += shade(uv - vec2(0.0, uvE.y), p - vec2(0.0, pe), u_time) * 0.16;
+  } else {
+    col = shade(uv, p, u_time);
+  }
+  // Post: contrast, saturation, hue, brightness, vignette, grain.
+  if (abs(u_contrast - 1.0) > 0.0001)
+    col = (col - 0.5) * u_contrast + 0.5;
   if (abs(u_saturation - 1.0) > 0.0001) {
     float luma = dot(col, vec3(0.299, 0.587, 0.114));
     col = mix(vec3(luma), col, u_saturation);
   }
-  if (abs(u_hue) > 0.0001) col = hueRotate(col, u_hue);
-  if (abs(u_brightness) > 0.0001) col += u_brightness;
+  if (abs(u_hue) > 0.0001)
+    col = hueRotate(col, u_hue);
+  if (abs(u_brightness) > 0.0001)
+    col += u_brightness;
   if (u_vignette > 0.0001) {
     float vd = length(screenUv - 0.5) * 1.41421356;
     col *= 1.0 - u_vignette * smoothstep(0.35, 1.0, vd);
   }
+  if (u_cursorPresence > 0.001 && u_cursorEffect > 3.5)
+    col += (vec3(0.18) + col * 0.12) * cursorMask * u_cursorStrength;
   if (u_grain > 0.0001)
-    col += (grainHash(gl_FragCoord.xy + vec2(u_seed*17.0, u_seed*31.0)) - 0.5) * u_grain;
-
+    col += (grainHash(
+      gl_FragCoord.xy + vec2(u_seed * 17.0, u_seed * 31.0)) - 0.5) * u_grain;
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
 `;
 
 function compileShader(gl: WebGLRenderingContext, type: number, src: string) {
-  const s = gl.createShader(type)!;
-  gl.shaderSource(s, src);
-  gl.compileShader(s);
-  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
-    console.error("Shader error:", gl.getShaderInfoLog(s));
-  return s;
+  const shader = gl.createShader(type);
+  if (!shader) throw new Error("Unable to create shader");
+
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw new Error(gl.getShaderInfoLog(shader) || "Shader compilation failed");
+  }
+
+  return shader;
 }
 
 interface WavesShaderProps {
@@ -211,101 +312,133 @@ export default function WavesShader({ className, style }: WavesShaderProps) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext("webgl") as WebGLRenderingContext | null;
+    const gl = canvas.getContext("webgl", { alpha: true, antialias: false });
     if (!gl) return;
 
-    // Build program
-    const prog = gl.createProgram()!;
-    gl.attachShader(prog, compileShader(gl, gl.VERTEX_SHADER, VERT));
-    gl.attachShader(prog, compileShader(gl, gl.FRAGMENT_SHADER, FRAG));
-    gl.linkProgram(prog);
-    gl.useProgram(prog);
+    let program: WebGLProgram | null = null;
+    let buffer: WebGLBuffer | null = null;
+    let resizeObserver: ResizeObserver | null = null;
+    let rafId = 0;
+    let pausedElapsed = 0;
+    let startTime = performance.now();
 
-    // Full-screen triangle
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    const aPos = gl.getAttribLocation(prog, "a_pos");
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+    try {
+      program = gl.createProgram();
+      if (!program) throw new Error("Unable to create program");
 
-    // Uniform locations
-    const uColors   = gl.getUniformLocation(prog, "u_colors");
-    const uScene    = gl.getUniformLocation(prog, "u_scene");
-    const uShape    = gl.getUniformLocation(prog, "u_shape");
-    const uSurface  = gl.getUniformLocation(prog, "u_surface");
-    const uFinish   = gl.getUniformLocation(prog, "u_finish");
-    const uTransform= gl.getUniformLocation(prog, "u_transform");
-    const uSpace    = gl.getUniformLocation(prog, "u_space");
-    const uCursor   = gl.getUniformLocation(prog, "u_cursor");
+      const vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERT);
+      const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, FRAG);
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
 
-    // Colors: #1A1423, #B75D69, #EACDC2, #FFF5EB
-    const colors = new Float32Array([
-      0.102, 0.078, 0.137,   // #1A1423
-      0.718, 0.365, 0.412,   // #B75D69
-      0.918, 0.804, 0.761,   // #EACDC2
-      1.000, 0.961, 0.922,   // #FFF5EB
-      0,0,0, 0,0,0, 0,0,0, 0,0,0, // padding to 8
-    ]);
-    gl.uniform3fv(uColors, colors);
-
-    // Presets
-    // u_shape: scale=1.32, intensity=0.49, paramA=0.84, warp=0.01
-    gl.uniform4f(uShape,    1.32, 0.49, 0.84, 0.01);
-    // u_surface: detail=1.73, contrast=1.08, brightness=0.07, saturation=2.00
-    gl.uniform4f(uSurface,  1.73, 1.08, 0.07, 2.00);
-    // u_finish: hue=2.27, vignette=0.00, blur=0.040, grain=0.35
-    gl.uniform4f(uFinish,   2.27, 0.00, 0.040, 0.35);
-    // u_transform: seed=4984, rotation=3.37, drift=0.40, oklab=1.0
-    gl.uniform4f(uTransform, 4984.0, 3.37, 0.40, 1.0);
-    // u_space: offset=-0.13,0.05, pointer=0,0
-    gl.uniform4f(uSpace,   -0.13, 0.05, 0.0, 0.0);
-    // u_cursor: presence=0, effect=3.0, strength=0.54, radius=0.56
-    gl.uniform4f(uCursor,   0.0, 3.0, 0.54, 0.56);
-
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    let raf = 0;
-    let start = performance.now();
-
-    const resize = () => {
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-      canvas.width  = w * DPR;
-      canvas.height = h * DPR;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
-
-    const tick = () => {
-      const t = (performance.now() - start) / 1000;
-      // speed 30/100 => multiply by -0.30 (negative = direction control via u_scene.z)
-      gl.uniform4f(uScene, canvas.width, canvas.height, t * -0.30 * 2.23, 4.0);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-      raf = requestAnimationFrame(tick);
-    };
-
-    // Pause when tab hidden
-    const onVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-      } else {
-        start = performance.now() - start; // re-sync time
-        start = performance.now();
-        tick();
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        throw new Error(gl.getProgramInfoLog(program) || "Program link failed");
       }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    raf = requestAnimationFrame(tick);
+
+      gl.useProgram(program);
+
+      buffer = gl.createBuffer();
+      if (!buffer) throw new Error("Unable to create buffer");
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+
+      const aPos = gl.getAttribLocation(program, "a_pos");
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+      const uColors = gl.getUniformLocation(program, "u_colors");
+      const uScene = gl.getUniformLocation(program, "u_scene");
+      const uShape = gl.getUniformLocation(program, "u_shape");
+      const uSurface = gl.getUniformLocation(program, "u_surface");
+      const uFinish = gl.getUniformLocation(program, "u_finish");
+      const uTransform = gl.getUniformLocation(program, "u_transform");
+      const uSpace = gl.getUniformLocation(program, "u_space");
+      const uCursor = gl.getUniformLocation(program, "u_cursor");
+
+      if (!uColors || !uScene || !uShape || !uSurface || !uFinish || !uTransform || !uSpace || !uCursor) {
+        throw new Error("Missing shader uniforms");
+      }
+
+      const colors = new Float32Array([
+        0.102, 0.078, 0.137,
+        0.718, 0.365, 0.412,
+        0.918, 0.804, 0.761,
+        1.000, 0.961, 0.922,
+        0.000, 0.000, 0.000,
+        0.000, 0.000, 0.000,
+        0.000, 0.000, 0.000,
+        0.000, 0.000, 0.000,
+      ]);
+      gl.uniform3fv(uColors, colors);
+      gl.uniform4f(uShape, 1.32, 0.49, 0.84, 0.01);
+      gl.uniform4f(uSurface, 1.73, 1.08, 0.07, 2.00);
+      gl.uniform4f(uFinish, 2.27, 0.00, 0.040, 0.35);
+      gl.uniform4f(uTransform, 4984.0, 3.37, 0.40, 1.0);
+      gl.uniform4f(uSpace, -0.13, 0.05, 0.0, 0.0);
+      gl.uniform4f(uCursor, 0.0, 3.0, 0.54, 0.56);
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      const resize = () => {
+        const width = canvas.clientWidth || canvas.offsetWidth;
+        const height = canvas.clientHeight || canvas.offsetHeight;
+        canvas.width = Math.max(1, Math.floor(width * dpr));
+        canvas.height = Math.max(1, Math.floor(height * dpr));
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      };
+
+      const render = () => {
+        const seconds = (performance.now() - startTime) / 1000;
+        gl.uniform4f(uScene, canvas.width, canvas.height, seconds * -0.67, 4.0);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        rafId = window.requestAnimationFrame(render);
+      };
+
+      const start = () => {
+        cancelAnimationFrame(rafId);
+        startTime = performance.now() - pausedElapsed;
+        rafId = window.requestAnimationFrame(render);
+      };
+
+      const stop = () => {
+        pausedElapsed = performance.now() - startTime;
+        cancelAnimationFrame(rafId);
+      };
+
+      resize();
+      resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(canvas);
+
+      const onVisibilityChange = () => {
+        if (document.hidden) {
+          stop();
+        } else {
+          start();
+        }
+      };
+
+      document.addEventListener("visibilitychange", onVisibilityChange);
+      start();
+
+      return () => {
+        cancelAnimationFrame(rafId);
+        resizeObserver?.disconnect();
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+        gl.deleteBuffer(buffer);
+        gl.deleteProgram(program);
+      };
+    } catch (error) {
+      console.error(error);
+      if (buffer) gl.deleteBuffer(buffer);
+      if (program) gl.deleteProgram(program);
+    }
 
     return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
-      gl.deleteProgram(prog);
-      gl.deleteBuffer(buf);
+      cancelAnimationFrame(rafId);
+      resizeObserver?.disconnect();
+      if (buffer) gl.deleteBuffer(buffer);
+      if (program) gl.deleteProgram(program);
     };
   }, []);
 

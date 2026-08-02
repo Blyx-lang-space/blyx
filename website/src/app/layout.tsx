@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import AppBackground from '@/components/AppBackground';
 
 export const metadata: Metadata = {
   title: 'Blyx — A language built for the AI era.',
@@ -31,7 +32,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <link rel="icon" href="/blyx.png" />
       </head>
-      <body>{children}</body>
+      <body>
+        <AppBackground />
+        <div style={{ position: 'relative', zIndex: 1, minHeight: '100vh' }}>{children}</div>
+      </body>
     </html>
   );
 }

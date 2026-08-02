@@ -1,44 +1,72 @@
-import React from 'react';
+import React from "react";
+import Container from "@/components/ui/Container";
+import Breadcrumb from "@/components/Breadcrumb";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import { Code, CheckCircle, Download, ExternalLink } from "lucide-react";
 
 export const metadata = {
-  title: 'Official VS Code Extension — Blyx Language',
-  description: 'Official Visual Studio Code extension providing syntax highlighting, autocomplete, diagnostics, formatting, and hover support for Blyx.',
+  title: "VS Code Extension — Blyx Language",
+  description: "Official BLYX Language extension for Visual Studio Code featuring syntax highlighting, language server diagnostics, and code completion.",
 };
 
 export default function VSCodePage() {
   return (
-    <div className="min-h-screen bg-[#07090e] text-[#f8fafc] py-16 px-6">
-      <div className="max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/20 text-[#00f2fe] text-xs font-semibold mb-6">
-          Official IDE Integration
+    <Container size="lg" className="py-12 space-y-12">
+      <Breadcrumb items={[{ label: "VS Code Extension" }]} />
+
+      <div className="space-y-4 max-w-3xl">
+        <div className="inline-flex items-center space-x-2 text-xs font-mono font-semibold text-[var(--accent)] uppercase">
+          <span>Marketplace Publisher: RahulChaube</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#00f2fe] to-[#7f00ff] bg-clip-text text-transparent mb-4">
-          Blyx for Visual Studio Code
+        <h1 className="font-['IBM_Plex_Sans'] font-bold text-4xl text-[var(--text-primary)]">
+          BLYX Language VS Code Extension
         </h1>
-        <p className="text-[#94a3b8] text-lg mb-8">
-          Rich language support powered by the stdio JSON-RPC LSP server (<code>blyx-analyzer</code>).
+        <p className="text-lg text-[var(--text-secondary)] leading-relaxed">
+          The official Visual Studio Code language support extension for Blyx. Provides full syntax highlighting, language server protocol (LSP) diagnostics, code completion, and BIR SSA inspection.
         </p>
-
-        <div className="p-8 rounded-2xl bg-[#0f141d] border border-[#00f2fe]/20 text-left mb-12 shadow-2xl">
-          <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-            <span className="font-mono text-sm text-[#00f2fe]">editors/code/package.json</span>
-            <span className="px-2 py-1 text-xs rounded bg-yellow-500/20 text-yellow-300 font-medium">Coming Soon to Marketplace</span>
-          </div>
-
-          <h2 className="text-xl font-semibold mb-4 text-[#f8fafc]">Extension Features</h2>
-          <ul className="space-y-3 text-sm text-[#cbd5e1] list-disc list-inside mb-8">
-            <li><strong>Syntax Highlighting</strong>: Full grammar support for <code>actor</code>, <code>tensor&lt;T, D1, D2&gt;</code>, and <code>gpu &#123; ... &#125;</code> constructs.</li>
-            <li><strong>Auto-Completion</strong>: Real-time completion items for standard library modules (<code>blyx-std</code>).</li>
-            <li><strong>Diagnostics & Error Hints</strong>: Real-time inline type errors powered by <code>blyx-analyzer</code>.</li>
-            <li><strong>Document Formatting</strong>: On-save formatting integration with <code>blyxfmt</code>.</li>
-            <li><strong>Hover Documentation</strong>: Type signature and docstring hover tooltips.</li>
-          </ul>
-
-          <div className="p-4 rounded-lg bg-[#07090e] border border-white/5 font-mono text-xs text-[#38bdf8]">
-            code --install-extension editors/code
-          </div>
+        <div className="pt-2 flex flex-wrap gap-4">
+          <Button
+            href="https://marketplace.visualstudio.com/items?itemName=RahulChaube.blyx-language"
+            variant="primary"
+            size="lg"
+          >
+            <Download className="w-4 h-4 mr-2" /> Install from Marketplace
+          </Button>
         </div>
       </div>
-    </div>
+
+      <div className="grid md:grid-cols-3 gap-6">
+        <Card className="space-y-3">
+          <CheckCircle className="w-5 h-5 text-emerald-500" />
+          <h3 className="font-['IBM_Plex_Sans'] font-bold text-base text-[var(--text-primary)]">
+            Syntax Highlighting
+          </h3>
+          <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+            Full TextMate grammar highlighting keywords, static tensor types, actor primitives, and GPU kernels.
+          </p>
+        </Card>
+
+        <Card className="space-y-3">
+          <CheckCircle className="w-5 h-5 text-emerald-500" />
+          <h3 className="font-['IBM_Plex_Sans'] font-bold text-base text-[var(--text-primary)]">
+            LSP Diagnostics
+          </h3>
+          <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+            Real-time inline compiler error messages, type hover tooltips, and go-to-definition support.
+          </p>
+        </Card>
+
+        <Card className="space-y-3">
+          <CheckCircle className="w-5 h-5 text-emerald-500" />
+          <h3 className="font-['IBM_Plex_Sans'] font-bold text-base text-[var(--text-primary)]">
+            BIR SSA Viewer
+          </h3>
+          <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+            Inspect emitted BIR SSA intermediate code directly alongside your source files in VS Code.
+          </p>
+        </Card>
+      </div>
+    </Container>
   );
 }

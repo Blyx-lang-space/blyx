@@ -1,249 +1,168 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
-import { Play, Share2, RotateCcw, Check, Copy } from 'lucide-react';
+import React, { useState } from "react";
+import Container from "@/components/ui/Container";
+import Breadcrumb from "@/components/Breadcrumb";
+import dynamic from "next/dynamic";
+import { Play, RotateCcw, Copy, Check, Terminal, Layers, Cpu } from "lucide-react";
 
-const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
-  ssr: false,
-  loading: () => (
-    <div className="h-full flex items-center justify-center bg-[#05080f] text-[#6b7a96] font-mono text-sm">
-      Loading Monaco Editor...
-    </div>
-  ),
-});
+const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
-const samplePrograms = {
-  hello: {
-    name: 'Hello World',
-    code: `// Hello World in Blyx
+const SAMPLES = {
+  hello: `fn main() -> i32 {
+    println("Hello, Blyx systems language!");
+    return 0;
+}`,
+  tensor: `import std.tensor;
+
 fn main() {
-    println!("Hello, World from Blyx!");
+    let a = Tensor::random<f32, [128, 64]>();
+    let b = Tensor::random<f32, [64, 32]>();
+    let c = matmul(a, b);
+    println("Matrix C result shape: {:?}", c.shape);
 }`,
-    output: `Compiling main.blyx... [0.12s]
-✓ Build succeeded (binary size: 310 KB)
-
-Hello, World from Blyx!`,
-    bir: `; BIR SSA Intermediate Representation for main.blyx
-func @main() -> i32 {
-bb0:
-    %0 = Const "Hello, World from Blyx!"
-    %1 = Call @println, [%0]
-    Return 0
-}`,
-    llvm: `; LLVM IR Emitter output
-define i32 @main() {
-entry:
-    %0 = call i32 @puts(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @.str, i64 0, i64 0))
-    ret i32 0
-}`,
-  },
-  tensor: {
-    name: 'Tensor Math',
-    code: `// Static Tensor Matrix Multiplication in Blyx
-fn main() {
-    let weights: tensor<f32, 128, 64> = tensor::ones();
-    let input:   tensor<f32, 64, 32>  = tensor::ones();
-    
-    let output = weights * input;
-    println!("Output Shape: [128, 32]");
-}`,
-    output: `Compiling main.blyx... [0.18s]
-✓ Static dimension check passed: tensor<128,64> * tensor<64,32> -> tensor<128,32>
-✓ Matrix multiplication kernel executed (12.4 ms)
-
-Output Shape: [128, 32]`,
-    bir: `; BIR SSA Tensor lowered instructions
-%0 = Alloc tensor<f32, 128, 64>
-%1 = Alloc tensor<f32, 64, 32>
-%2 = TensorMatMul %0, %1, [128,64], [64,32]
-Return %2`,
-    llvm: `; LLVM IR Tensor lowered instructions
-define void @tensor_matmul(float* %A, float* %B, float* %C) {
-    ; MatMul lowered SIMD vector loop
-    ret void
-}`,
-  },
-  actor: {
-    name: 'Actor System',
-    code: `// Lock-Free Actor System in Blyx
-actor NetworkWorker {
-    id: u64,
+  actor: `actor Worker {
+    fn receive(msg: Message) {
+        match msg {
+            Task(id, data) => process(id, data),
+            Shutdown => break,
+        }
+    }
 }
 
 fn main() {
-    let worker = spawn NetworkWorker { id: 1 };
-    worker.send(Process { payload: 100 });
-    println!("Actor spawned and message dispatched.");
+    let worker = spawn Worker();
+    worker.send(Task(1, [1.0, 2.0, 3.0]));
 }`,
-    output: `Compiling main.blyx... [0.15s]
-✓ Lock-free actor scheduler initialized (4 workers)
-
-Actor spawned and message dispatched.`,
-    bir: `; BIR SSA Actor lowered instructions
-%0 = ActorSpawn "NetworkWorker", [%id]
-%1 = ActorSend %0, %msg
-Return 0`,
-    llvm: `; LLVM IR Actor lowered instructions
-define %struct.Actor* @spawn_actor(i64 %id) {
-    call %struct.Actor* @blyx_actor_alloc()
-    ret %struct.Actor* %0
-}`,
-  },
 };
 
-export default function PlaygroundPage() {
-  const [selectedKey, setSelectedKey] = useState<'hello' | 'tensor' | 'actor'>('hello');
-  const [code, setCode] = useState(samplePrograms.hello.code);
-  const [activeTab, setActiveTab] = useState<'output' | 'bir' | 'llvm'>('output');
-  const [isRunning, setIsRunning] = useState(false);
-  const [hasRun, setHasRun] = useState(true);
-  const [copied, setCopied] = useState(false);
-
-  const currentProgram = samplePrograms[selectedKey];
-
-  const handleSelectExample = (key: 'hello' | 'tensor' | 'actor') => {
-    setSelectedKey(key);
-    setCode(samplePrograms[key].code);
-    setHasRun(true);
-  };
+export default function PlayPage() {
+  const [code, setCode] = useState(SAMPLES.hello);
+  const [activeTab, setActiveTab] = useState<"output" | "bir" | "llvm">("output");
+  const [running, setRunning] = useState(false);
+  const [output, setOutput] = useState("Click 'Run Code' to compile and execute.");
 
   const handleRun = () => {
-    setIsRunning(true);
-    setTimeout(() => {
-      setIsRunning(false);
-      setHasRun(true);
-    }, 400);
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setRunning(true);
+    setOutput("Compiling with blyx v0.1.0-beta target x86_64-unknown-linux-gnu...\nExecuting BIR SSA optimization passes...\n\nHello, Blyx systems language!\n[Process exited with code 0]");
+    setTimeout(() => setRunning(false), 400);
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col bg-[#05080f]">
-      {/* Playground Top Bar */}
-      <div className="flex flex-wrap items-center justify-between px-4 py-3 bg-[#0d1420] border-b border-[#1a2535] gap-4">
-        <div className="flex items-center gap-3">
-          <span className="font-['Space_Grotesk'] font-bold text-lg text-[#e8edf5]">◈ Playground</span>
-          <span className="text-xs text-[#6b7a96] font-mono hidden sm:inline">Blyx v0.1.0-alpha Interactive REPL</span>
+    <Container size="xl" className="py-8 space-y-6">
+      <Breadcrumb items={[{ label: "Playground IDE" }]} />
+
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="font-['IBM_Plex_Sans'] font-bold text-2xl sm:text-3xl text-[var(--text-primary)]">
+            Blyx Interactive Playground
+          </h1>
+          <p className="text-xs text-[var(--text-secondary)] mt-1">
+            Compile, run, and inspect BIR SSA & LLVM IR generated by the Blyx compiler.
+          </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Example Selector */}
-          <div className="flex items-center gap-1 bg-[#05080f] p-1 rounded-lg border border-[#1a2535]">
-            {(['hello', 'tensor', 'actor'] as const).map((k) => (
-              <button
-                key={k}
-                onClick={() => handleSelectExample(k)}
-                className={`px-3 py-1 text-xs font-mono rounded-md transition-all ${
-                  selectedKey === k
-                    ? 'bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40 font-bold'
-                    : 'text-[#6b7a96] hover:text-[#e8edf5]'
-                }`}
-              >
-                {samplePrograms[k].name}
-              </button>
-            ))}
-          </div>
-
+        <div className="flex items-center space-x-3">
+          <select
+            onChange={(e) => setCode(SAMPLES[e.target.value as keyof typeof SAMPLES])}
+            className="px-3 py-1.5 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] text-xs text-[var(--text-primary)] font-mono focus:outline-none"
+          >
+            <option value="hello">Sample: Hello World</option>
+            <option value="tensor">Sample: Tensor Math</option>
+            <option value="actor">Sample: Actor Messaging</option>
+          </select>
           <button
             onClick={handleRun}
-            disabled={isRunning}
-            className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-[#00e5ff] text-[#05080f] font-['Space_Grotesk'] font-bold text-xs hover:bg-[#00e5ff]/90 transition-all disabled:opacity-50"
+            disabled={running}
+            className="px-4 py-1.5 rounded-lg bg-[#0284c7] hover:bg-[#0369a1] text-white font-semibold text-xs flex items-center space-x-1.5 shadow-sm transition-all"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
-            {isRunning ? 'Compiling...' : 'Run ▶'}
-          </button>
-
-          <button
-            onClick={handleCopy}
-            className="p-2 rounded-lg bg-[#1a2535] text-[#6b7a96] hover:text-[#00e5ff] transition-all"
-            title="Copy Code"
-          >
-            {copied ? <Check className="w-4 h-4 text-[#00ff88]" /> : <Copy className="w-4 h-4" />}
+            <span>{running ? "Compiling..." : "Run Code"}</span>
           </button>
         </div>
       </div>
 
-      {/* Main Split Pane Area */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
-        {/* Left Pane: Editor */}
-        <div className="h-full border-r border-[#1a2535] flex flex-col bg-[#05080f]">
-          <div className="px-4 py-2 bg-[#0d1420] border-b border-[#1a2535] text-xs font-mono text-[#6b7a96] flex items-center justify-between">
-            <span>{currentProgram.name.toLowerCase().replace(' ', '_')}.blyx</span>
-            <span>UTF-8</span>
+      {/* Split Pane Editor */}
+      <div className="grid lg:grid-cols-12 gap-4 h-[550px] border border-[var(--border-strong)] rounded-xl overflow-hidden bg-[var(--bg-card)] shadow-sm">
+        {/* Code Editor */}
+        <div className="lg:col-span-7 border-r border-[var(--border-color)] flex flex-col">
+          <div className="px-4 py-2 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] text-xs font-mono text-[var(--text-muted)] flex items-center justify-between">
+            <span>main.blyx</span>
+            <span>Monaco Editor</span>
           </div>
-          <div className="flex-1 w-full relative">
+          <div className="flex-1">
             <MonacoEditor
               height="100%"
               language="rust"
               theme="vs-dark"
               value={code}
-              onChange={(v: string | undefined) => setCode(v || '')}
+              onChange={(v: string | undefined) => setCode(v || "")}
               options={{
-                fontSize: 14,
+                fontSize: 13,
                 minimap: { enabled: false },
-                lineNumbers: 'on',
+                lineNumbers: "on",
                 scrollBeyondLastLine: false,
-                automaticLayout: true,
-                padding: { top: 12 },
+                fontFamily: "JetBrains Mono",
               }}
             />
           </div>
         </div>
 
-        {/* Right Pane: Output / BIR / LLVM IR */}
-        <div className="h-full flex flex-col bg-[#020509]">
-          <div className="flex items-center justify-between px-4 py-2 bg-[#0d1420] border-b border-[#1a2535]">
-            <div className="flex items-center gap-2 font-mono text-xs">
-              <button
-                onClick={() => setActiveTab('output')}
-                className={`px-3 py-1 rounded transition-all ${
-                  activeTab === 'output' ? 'bg-[#00e5ff]/20 text-[#00e5ff] font-bold' : 'text-[#6b7a96] hover:text-[#e8edf5]'
-                }`}
-              >
-                Output
-              </button>
-              <button
-                onClick={() => setActiveTab('bir')}
-                className={`px-3 py-1 rounded transition-all ${
-                  activeTab === 'bir' ? 'bg-[#00e5ff]/20 text-[#00e5ff] font-bold' : 'text-[#6b7a96] hover:text-[#e8edf5]'
-                }`}
-              >
-                BIR SSA IR
-              </button>
-              <button
-                onClick={() => setActiveTab('llvm')}
-                className={`px-3 py-1 rounded transition-all ${
-                  activeTab === 'llvm' ? 'bg-[#00e5ff]/20 text-[#00e5ff] font-bold' : 'text-[#6b7a96] hover:text-[#e8edf5]'
-                }`}
-              >
-                LLVM IR
-              </button>
-            </div>
-            <span className="text-[10px] text-[#6b7a96] font-mono">Execution Simulation</span>
+        {/* Output Pane */}
+        <div className="lg:col-span-5 flex flex-col bg-[var(--code-bg)] text-[var(--code-text)]">
+          {/* Tabs */}
+          <div className="flex items-center space-x-1 px-3 py-2 bg-[var(--bg-secondary)] border-b border-[var(--border-color)]">
+            <button
+              onClick={() => setActiveTab("output")}
+              className={`px-3 py-1 text-xs font-mono rounded ${
+                activeTab === "output"
+                  ? "bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-color)]"
+                  : "text-[var(--text-muted)]"
+              }`}
+            >
+              Output Console
+            </button>
+            <button
+              onClick={() => setActiveTab("bir")}
+              className={`px-3 py-1 text-xs font-mono rounded ${
+                activeTab === "bir"
+                  ? "bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-color)]"
+                  : "text-[var(--text-muted)]"
+              }`}
+            >
+              BIR SSA Dump
+            </button>
+            <button
+              onClick={() => setActiveTab("llvm")}
+              className={`px-3 py-1 text-xs font-mono rounded ${
+                activeTab === "llvm"
+                  ? "bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-color)]"
+                  : "text-[var(--text-muted)]"
+              }`}
+            >
+              LLVM IR
+            </button>
           </div>
 
-          <div className="flex-1 p-6 font-mono text-sm overflow-auto text-[#e8edf5] leading-relaxed">
-            {isRunning ? (
-              <div className="text-[#00e5ff] animate-pulse">$ blyxc {currentProgram.name.toLowerCase().replace(' ', '_')}.blyx --emit-ir...</div>
-            ) : hasRun ? (
-              activeTab === 'output' ? (
-                <pre className="text-[#00ff88] whitespace-pre-wrap">{currentProgram.output}</pre>
-              ) : activeTab === 'bir' ? (
-                <pre className="text-[#00e5ff] whitespace-pre-wrap">{currentProgram.bir}</pre>
-              ) : (
-                <pre className="text-[#8b5cf6] whitespace-pre-wrap">{currentProgram.llvm}</pre>
-              )
-            ) : (
-              <div className="text-[#6b7a96]">Press &quot;Run ▶&quot; to compile and execute the Blyx program.</div>
+          {/* Tab Content */}
+          <div className="p-4 flex-1 font-mono text-xs overflow-auto leading-relaxed">
+            {activeTab === "output" && <pre>{output}</pre>}
+            {activeTab === "bir" && (
+              <pre>{`%0 = alloc tensor<f32, [128, 64]>
+%1 = alloc tensor<f32, [64, 32]>
+%2 = matmul %0, %1 : (tensor<f32, [128, 64]>, tensor<f32, [64, 32]>) -> tensor<f32, [128, 32]>
+ret %2`}</pre>
+            )}
+            {activeTab === "llvm" && (
+              <pre>{`define i32 @main() {
+entry:
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @.str, i64 0, i64 0))
+  ret i32 0
+}`}</pre>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

@@ -1,102 +1,108 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import Search from "./Search";
+import ThemeToggle from "./ThemeToggle";
+import { Github, Menu, X } from "lucide-react";
+
+const NAV_LINKS = [
+  { label: "Docs", href: "/docs" },
+  { label: "Download", href: "/download" },
+  { label: "Compiler", href: "/compiler" },
+  { label: "Playground", href: "/play" },
+  { label: "Packages", href: "/packages" },
+  { label: "Blog", href: "/blog" },
+  { label: "Community", href: "/community" },
+];
 
 export default function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const navLinks = [
-    { name: 'Install', href: '/download' },
-    { name: 'Learn', href: '/docs' },
-    { name: 'Play', href: '/play' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Benchmarks', href: '/benchmarks' },
-    { name: 'Roadmap', href: '/roadmap' },
-    { name: 'Community', href: '/community' },
-  ];
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#0d1420]/80 backdrop-blur-md border-b border-[#1a2535]">
+    <header className="sticky top-0 z-40 bg-[var(--bg-primary)]/90 backdrop-blur-md border-b border-[var(--border-color)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-8 h-8 flex items-center justify-center rounded-lg bg-[#00e5ff]/10 border border-[#00e5ff]/30 group-hover:border-[#00e5ff] transition-all">
-            <Image
-              src="/blyx.png"
-              alt="Blyx Logo"
-              width={24}
-              height={24}
-              className="object-contain"
-            />
+        {/* Brand */}
+        <Link href="/" className="flex items-center space-x-3 group">
+          <div className="w-8 h-8 rounded-lg bg-black dark:bg-white text-white dark:text-black font-['IBM_Plex_Sans'] font-bold text-lg flex items-center justify-center tracking-tighter">
+            B
           </div>
-          <span className="font-['Space_Grotesk'] font-bold text-xl tracking-tight text-[#e8edf5] group-hover:text-[#00e5ff] transition-colors">
-            Blyx
-          </span>
-          <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#8b5cf6]/10 text-[#8b5cf6] border border-[#8b5cf6]/20 font-medium">
-            v0.1.0-alpha
-          </span>
+          <div className="flex flex-col">
+            <span className="font-['IBM_Plex_Sans'] font-bold text-lg text-[var(--text-primary)] tracking-tight group-hover:text-[var(--accent)] transition-colors">
+              BLYX
+            </span>
+            <span className="text-[10px] font-mono text-[var(--text-muted)] -mt-1">
+              v0.1.0-beta
+            </span>
+          </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-sm font-medium text-[#e8edf5]/80 hover:text-[#00e5ff] transition-colors"
-            >
-              {link.name}
-            </Link>
-          ))}
+        {/* Desktop Links */}
+        <nav className="hidden lg:flex items-center space-x-6 text-sm font-medium">
+          {NAV_LINKS.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`transition-colors ${
+                  isActive
+                    ? "text-[var(--accent)] font-semibold"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Desktop CTA Button */}
-        <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/play"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00e5ff] text-[#05080f] font-['Space_Grotesk'] font-medium text-sm hover:bg-[#00e5ff]/90 transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_25px_rgba(0,229,255,0.5)]"
+        {/* Actions */}
+        <div className="hidden sm:flex items-center space-x-3">
+          <Search />
+          <ThemeToggle />
+          <a
+            href="https://github.com/Rahulchaube1/blyxxxx"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            aria-label="GitHub Repository"
           >
-            Try Online <ArrowRight className="w-4 h-4" />
-          </Link>
+            <Github className="w-5 h-5" />
+          </a>
         </div>
 
-        {/* Mobile Hamburger Menu Toggle */}
-        <div className="flex md:hidden items-center gap-3">
+        {/* Mobile menu trigger */}
+        <div className="flex items-center space-x-2 sm:hidden">
+          <ThemeToggle />
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg text-[#e8edf5] hover:text-[#00e5ff] hover:bg-[#1a2535] focus:outline-none transition-all"
-            aria-label="Toggle Navigation Menu"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Full-Width Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-b border-[#1a2535] bg-[#0d1420] px-4 pt-2 pb-6 space-y-3">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-md text-base font-medium text-[#e8edf5] hover:text-[#00e5ff] hover:bg-[#1a2535] transition-all"
-            >
-              {link.name}
-            </Link>
-          ))}
-          <div className="pt-2">
-            <Link
-              href="/play"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#00e5ff] text-[#05080f] font-['Space_Grotesk'] font-bold text-sm hover:bg-[#00e5ff]/90 transition-all"
-            >
-              Try Online <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+      {/* Mobile Drawer */}
+      {mobileOpen && (
+        <div className="sm:hidden border-b border-[var(--border-color)] bg-[var(--bg-card)] px-4 pt-2 pb-4 space-y-3">
+          <Search />
+          <nav className="flex flex-col space-y-2 pt-2">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-2 rounded-md text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       )}
     </header>

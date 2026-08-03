@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 
 /* Lazy-load client components */
 const WavesShader = dynamic(() => import("@/components/WavesShader"), { ssr: false });
-const MarqueSection = dynamic(() => import("@/components/MarqueSection"), { ssr: false });
+const OrbitingSection = dynamic(() => import("@/components/OrbitingCirclesGlobeDemo"), { ssr: false });
 
 /* ─── Shared style helpers ─────────────────────────────────── */
 const sectionPad = "clamp(72px,9vw,120px) clamp(20px,5vw,80px)";
@@ -566,8 +566,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══ SECTION 7 — MARQUEE ALONG SVG PATH ══ */}
-      <MarqueSection />
+      {/* ══ SECTION 7 — ORBITING CIRCLES GLOBE ══ */}
+      <OrbitingSection />
 
       {/* ══ SECTION 8 — GET STARTED CTA (WebGL Waves shader background) ══ */}
       <section style={{ position: "relative", overflow: "hidden", textAlign: "center", color: "#ffffff" }}>

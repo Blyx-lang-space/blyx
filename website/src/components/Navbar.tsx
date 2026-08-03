@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-const NAV_LINKS = [
-  ["Install", "/download"],
-  ["Learn", "/learn"],
-  ["Playground", "/play"],
-  ["Tools", "/compiler"],
-  ["Community", "/community"],
-  ["Blog", "/blog"],
+const NAV_LINKS: [string, string, boolean][] = [
+  ["Install",    "/download",                      false],
+  ["Learn",      "https://doc.blyx-lang.space/",   true],   // external docs
+  ["Playground", "/play",                          false],
+  ["Tools",      "/compiler",                      false],
+  ["Community",  "/community",                     false],
+  ["Blog",       "/blog",                          false],
 ];
 
 export default function Navbar() {
@@ -71,23 +71,43 @@ export default function Navbar() {
 
           {/* Desktop Nav Links */}
           <div className="nav-links" style={{ display: "flex", gap: "clamp(18px, 3vw, 36px)", alignItems: "center" }}>
-            {NAV_LINKS.map(([label, href]) => (
-              <Link
-                key={href}
-                href={href}
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "clamp(15px, 1.5vw, 17px)",
-                  color: "#374151",
-                  textDecoration: "none",
-                  padding: "4px 0",
-                  borderBottom: "2px solid transparent",
-                  transition: "all 0.15s",
-                }}
-              >
-                {label}
-              </Link>
+            {NAV_LINKS.map(([label, href, external]) => (
+              external ? (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "clamp(15px, 1.5vw, 17px)",
+                    color: "#374151",
+                    textDecoration: "none",
+                    padding: "4px 0",
+                    borderBottom: "2px solid transparent",
+                  }}
+                >
+                  {label}
+                </a>
+              ) : (
+                <Link
+                  key={href}
+                  href={href}
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "clamp(15px, 1.5vw, 17px)",
+                    color: "#374151",
+                    textDecoration: "none",
+                    padding: "4px 0",
+                    borderBottom: "2px solid transparent",
+                    transition: "all 0.15s",
+                  }}
+                >
+                  {label}
+                </Link>
+              )
             ))}
             <a
               href="https://github.com/Rahulchaube1/blyxxxx"
@@ -138,21 +158,40 @@ export default function Navbar() {
             flexDirection: "column",
             gap: "20px",
           }} className="mobile-drawer">
-            {NAV_LINKS.map(([label, href]) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setOpen(false)}
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: "18px",
-                  fontWeight: 600,
-                  color: "#111827",
-                  textDecoration: "none",
-                }}
-              >
-                {label}
-              </Link>
+            {NAV_LINKS.map(([label, href, external]) => (
+              external ? (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    color: "#111827",
+                    textDecoration: "none",
+                  }}
+                >
+                  {label} ↗
+                </a>
+              ) : (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    color: "#111827",
+                    textDecoration: "none",
+                  }}
+                >
+                  {label}
+                </Link>
+              )
             ))}
             <a
               href="https://github.com/Rahulchaube1/blyxxxx"
